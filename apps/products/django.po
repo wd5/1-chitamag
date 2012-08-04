@@ -1,0 +1,71 @@
+msgid "Products"
+msgstr "Товары"
+
+msgid "products"
+msgstr "товары"
+
+msgid "categories"
+msgstr "категории"
+
+msgid "category"
+msgstr "категория"
+
+msgid "product_items"
+msgstr "товары"
+
+msgid "product_item"
+msgstr "товар"
+
+msgid "phrases"
+msgstr "фразы для поиска"
+
+msgid "phrase"
+msgstr "фраза"
+
+msgid "product_photos"
+msgstr "изображения товара"
+
+msgid "product_photo"
+msgstr "изображение"
+
+msgid "property"
+msgstr "свойство"
+
+msgid "properties"
+msgstr "свойства продукта"
+
+msgid "actions"
+msgstr "акции и скидки"
+
+msgid "action"
+msgstr "акция"
+
+msgid "category_services"
+msgstr "услуги при покуке"
+
+msgid "category_service"
+msgstr "услуга"
+
+msgid "manufacturer"
+msgstr "производитель"
+
+msgid "manufacturers"
+msgstr "производители"
+
+msgid "featuregroup_item"
+msgstr "группа"
+
+msgid "featuregroup_items"
+msgstr "группы характеристик"
+
+msgid "featurename_item"
+msgstr "название"
+
+msgid "featurename_items"
+msgstr "название характеристик товаров"
+
+msgid "featurevalue_item"
+msgstr "значение"
+
+msgid "featurevalue_items"
+msgstr "значения характеристик товаров"

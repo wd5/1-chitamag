@@ -1,0 +1,48 @@
+@charset "utf-8";
+
+
+/*6-7*/
+.col,
+.page_h h1,
+.catalog_submenu .curr,
+.item,
+.filter_brands li,
+.item_views_menu li,
+.item_gal_zl, .item_gal ul,
+.main_param_name, .main_param_val, 
+.param_name, .param_val,
+.all_params_lnk,
+.item_page_price,
+.one_click_note ,
+.cart_name, .cart_qty, .cart_price,
+.cart_option_name,
+.cart_option_checked .cart_price,
+.order_form_h_num, .order_form_h h2,
+.ifregistred,
+.order_form .input3,
+.order_menu li,
+.order_type_text,
+.sale_img, .sale_des,
+.footer_menu li,
+.promo_4_l, .promo_4_r {
+	*display:inline;
+	*zoom:1;
+}
+.some, .cart_price_val, .dot {
+	*position:relative;
+	*zoom:1;
+}
+.buy_btn {
+	*top: 4px;
+}
+
+/*6-7*/
+
+.promo_1:hover, .promo_2:hover, .promo_3:hover, .promo_4:hover, .promo_5:hover {
+	border: 3px solid #ddd;
+	z-index: 2;
+	margin: -3px 0 0 -3px;
+}
+
+
+

@@ -1,0 +1,364 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="media/css/style.css" rel="stylesheet" type="text/css" />
+<!--[if lte IE 8]><link rel="stylesheet" type="text/css" media="screen" href="media/css/ie.css" /><![endif]--> 
+<script type="text/javascript" src="media/js/jquery.js"></script>
+<script type="text/javascript" src="media/js/jquery-ui-1.8.21.custom.min.js"></script>
+<script type="text/javascript" src="media/js/script.js"></script>
+<title>Читамаг</title>
+</head>
+
+<body>
+<div class="wrapper">
+
+<!--PAGE-->
+<div class="page">
+
+    <!--HEADER-->
+	<div class="header">
+		<a id="logo_box" href="/" title="Читамаг"><img id="logo" src="media/img/logo.png" alt="Читамаг" width="155" height="44" /></a>
+		
+		<div class="header_search">
+			<form class="search_form" method="post" action="">
+				<div class="input search_input"><input type="text" placeholder="Поиск в каталоге" /></div>
+				<div class="search_submit"><input type="submit" value="" /></div>
+			</form>
+		</div>
+			
+		<div class="header_menu">
+			<ul>
+				<li><a href="#">Доставка и оплата</a></li>
+				<li><a href="#">Сервис и гарантии</a></li>
+				<li><a href="#">Контакты</a></li>
+			</ul>
+		</div><!--/menu-->
+		
+		<div class="sales_teaser">
+			<a href="#"><span>Акции и&nbsp;скидки</span></a>
+		</div>
+		
+		<div class="contacts">
+			<div class="tel">45-76-34</div>
+		</div><!--/contacts-->
+		
+		<div class="header_auth">
+			<a class="auth_lnk dot" href="#">Вход</a>
+			<a class="reg_lnk" href="#">Регистрация</a>
+		</div>
+		
+		<div class="cartbox">
+			<div class="cartbox_full">
+				<div class="cartbox_h"><a href="#">Ваш заказ</a></div>
+				<div>
+					<p>2 товара на</p>
+					<p><b>25 340</b> <i class="r">руб.</i></p>
+				</div>
+			</div>
+		</div>
+	</div>
+    <!--/HEADER-->
+ 
+
+    <!--MAIN-->
+	<div class="main">
+		<div class="left col">
+			<div class="catalog_menu">
+				<ul>
+					<li>
+						<div class="catalog_menu_1 curr"><a href="#">Бытовая техника</a></div>
+						<ul class="catalog_submenu">
+							<li><a href="#">Холодильное оборудование</a><span></span></li>
+							<li class="curr"><a href="#">Стиральные машины</a><span></span></li>
+							<li><a href="#">Кухонные плиты</a><span></span></li>
+							<li><a href="#">Посудомоечные машины</a><span></span></li>
+							<li><a href="#">Утюги</a><span></span></li>
+							<li><a href="#">Пылесосы</a><span></span></li>
+							<li><a href="#">Автопылесосы</a><span></span></li>
+							<li><a href="#">Швейные машинки</a><span></span></li>
+							<li><a href="#">Аксессуары</a><span></span></li>
+							<li><a href="#">Гладильные системы</a><span></span></li>
+						</ul>
+					</li>
+					<li><div class="catalog_menu_1"><a href="#">Кухонная техника</a></div></li>
+					<li><div class="catalog_menu_1"><a href="#">Климатическая техника</a></div></li>
+					<li><div class="catalog_menu_1"><a href="#">Мобильная связь</a></div></li>
+					<li><div class="catalog_menu_1"><a href="#">Телефоны и средства связи</a></div></li>
+					<li><div class="catalog_menu_1"><a href="#">Телевизоры</a></div></li>
+					<li><div class="catalog_menu_1"><a href="#">DVD техника</a></div></li>
+					<li><div class="catalog_menu_1"><a href="#">Фото и видеотехника</a></div></li>
+					<li><div class="catalog_menu_1"><a href="#">Аудиотехника</a></div></li>
+					<li><div class="catalog_menu_1"><a href="#">Компьютеры и оргтехника</a></div></li>
+				</ul>
+			</div>
+		</div><!--/left-->
+				
+		<div class="right col">
+			<div class="bread">
+				<a href="#">Бытовая техника</a> /
+			</div>
+			
+			<div class="page_h">
+				<h1>Пылесосы</h1>
+				<span>
+					<a href="#">сначала дорогие</a>
+					<a href="#">сначала дешёвые</a>
+				</span>
+			</div>
+			
+			<div class="items">
+				<div class="filters">
+					<div class="filter">
+						<div class="filter_h">Производители</div>
+						<ul class="filter_brands">
+							<li><a href="#">Samsung</a></li>
+							<li><a href="#">Bosch</a></li>
+							<li><a href="#">LG</a></li>
+							<li class="curr"><a href="#">Philips</a></li>
+							<li><a href="#">Electrolux</a></li>
+							<li><a href="#">Thomas</a></li>
+							<li><a href="#">Zanussi</a></li>
+							<li><a href="#">Rowenta</a></li>
+						</ul>
+					</div>
+					
+					<div class="filter">
+						<div class="filter_h">Цена</div>
+						<div class="filter_price">
+							До <span class="input filter_price_input"><input type="text" value="4 500" /></span> руб.
+							<div id="filter_price_slider"></div>
+						</div>
+					</div>
+					
+					<div class="filter">
+						<div class="filter_h">Пылесборник</div>
+						<ul class="filter_params">
+							<li><a href="#">Мешок</a></li>
+							<li class="curr"><a href="#">Мешок и циклонный фильтр</a></li>
+							<li><a href="#">Циклонный фильтр</a></li>
+						</ul>
+					</div>
+					
+					<div class="filter_submit"><input class="btn1 filter_submit_btn" type="submit" value="Применить" /></div>
+					
+					<div class="filters_b"></div>
+				</div><!--/filters-->
+				
+				
+				<div class="item">
+					<div class="item_t">
+						<a href="#"><img src="media/images/item1.jpg" alt="LCD телевизор LG 32LK451" /></a>
+					</div>
+					<div class="item_b">
+						<h3 class="item_name"><a href="#">LCD телевизор LG 32LK451</a></h3>
+						<div class="item_price">12 345 <i class="r">руб.</i></div>
+					</div>
+				</div>
+				
+				<div class="item">
+					<div class="item_t">
+						<a href="#"><img src="media/images/item2.jpg" alt="Стиральная машина CANDY GO3E 210 LC" /></a>
+					</div>
+					<div class="item_b">
+						<h3 class="item_name"><a href="#">Стиральная машина CANDY GO3E 210 LC</a></h3>
+						<div class="item_price">12 345 <i class="r">руб.</i></div>
+					</div>
+				</div>
+				
+				<div class="item">
+					<div class="item_t">
+						<a href="#"><img src="media/images/item3.jpg" alt="Samsung RL-34 ECTS (RL-34 ECMS)" /></a>
+						<div class="item_labels">
+							<div class="item_label_1"><span>Скидка</span></div>
+						</div>
+					</div>
+					<div class="item_b">
+						<h3 class="item_name"><a href="#">Samsung RL-34 ECTS (RL-34 ECMS)</a></h3>
+						<div class="item_price">12 345 <i class="r">руб.</i></div>
+					</div>
+				</div>
+				
+				<div class="item">
+					<div class="item_t">
+						<a href="#"><img src="media/images/item4.jpg" alt="Газовая плита HANSA FCGW 57002014" /></a>
+					</div>
+					<div class="item_b">
+						<h3 class="item_name"><a href="#">Газовая плита HANSA FCGW 57002014</a></h3>
+						<div class="item_price">12 345 <i class="r">руб.</i></div>
+					</div>
+				</div>
+				
+				<div class="item">
+					<div class="item_t">
+						<a href="#"><img src="media/images/item5.jpg" alt="PANASONIC DMC-LS5EE-K" /></a>
+						<div class="item_labels">
+							<div class="item_label_2"><span>Новинка</span></div>
+						</div>
+					</div>
+					<div class="item_b">
+						<h3 class="item_name"><a href="#">PANASONIC DMC-LS5EE-K</a></h3>
+						<div class="item_price">12 345 <i class="r">руб.</i></div>
+					</div>
+				</div>
+				
+				<div class="item">
+					<div class="item_t">
+						<a href="#"><img src="media/images/item6.jpg" alt="Пылесос SAMSUNG SC4520" /></a>
+						<div class="item_labels">
+							<div class="item_label_1"><span>Скидка</span></div>
+							<div class="item_label_2"><span>Новинка</span></div>
+							<div class="item_label_3"><span>Хит продаж</span></div>
+						</div>
+					</div>
+					<div class="item_b">
+						<h3 class="item_name"><a href="#">Пылесос SAMSUNG SC4520</a></h3>
+						<div class="item_price">12 345 <i class="r">руб.</i></div>
+					</div>
+				</div>
+				
+				<div class="item">
+					<div class="item_t">
+						<a href="#"><img src="media/images/item1.jpg" alt="LCD телевизор LG 32LK451" /></a>
+					</div>
+					<div class="item_b">
+						<h3 class="item_name"><a href="#">LCD телевизор LG 32LK451</a></h3>
+						<div class="item_price">12 345 <i class="r">руб.</i></div>
+					</div>
+				</div>
+				
+				<div class="item">
+					<div class="item_t">
+						<a href="#"><img src="media/images/item2.jpg" alt="Стиральная машина CANDY GO3E 210 LC" /></a>
+					</div>
+					<div class="item_b">
+						<h3 class="item_name"><a href="#">Стиральная машина CANDY GO3E 210 LC</a></h3>
+						<div class="item_price">12 345 <i class="r">руб.</i></div>
+					</div>
+				</div>
+				
+				<div class="item">
+					<div class="item_t">
+						<a href="#"><img src="media/images/item1.jpg" alt="LCD телевизор LG 32LK451" /></a>
+					</div>
+					<div class="item_b">
+						<h3 class="item_name"><a href="#">LCD телевизор LG 32LK451</a></h3>
+						<div class="item_price">12 345 <i class="r">руб.</i></div>
+					</div>
+				</div>
+				
+				<div class="item">
+					<div class="item_t">
+						<a href="#"><img src="media/images/item2.jpg" alt="Стиральная машина CANDY GO3E 210 LC" /></a>
+					</div>
+					<div class="item_b">
+						<h3 class="item_name"><a href="#">Стиральная машина CANDY GO3E 210 LC</a></h3>
+						<div class="item_price">12 345 <i class="r">руб.</i></div>
+					</div>
+				</div>
+				
+				<div class="item">
+					<div class="item_t">
+						<a href="#"><img src="media/images/item1.jpg" alt="LCD телевизор LG 32LK451" /></a>
+					</div>
+					<div class="item_b">
+						<h3 class="item_name"><a href="#">LCD телевизор LG 32LK451</a></h3>
+						<div class="item_price">12 345 <i class="r">руб.</i></div>
+					</div>
+				</div>
+				
+				<div class="item">
+					<div class="item_t">
+						<a href="#"><img src="media/images/item2.jpg" alt="Стиральная машина CANDY GO3E 210 LC" /></a>
+					</div>
+					<div class="item_b">
+						<h3 class="item_name"><a href="#">Стиральная машина CANDY GO3E 210 LC</a></h3>
+						<div class="item_price">12 345 <i class="r">руб.</i></div>
+					</div>
+				</div>
+				
+				<div class="item">
+					<div class="item_t">
+						<a href="#"><img src="media/images/item1.jpg" alt="LCD телевизор LG 32LK451" /></a>
+					</div>
+					<div class="item_b">
+						<h3 class="item_name"><a href="#">LCD телевизор LG 32LK451</a></h3>
+						<div class="item_price">12 345 <i class="r">руб.</i></div>
+					</div>
+				</div>
+				
+				<div class="item">
+					<div class="item_t">
+						<a href="#"><img src="media/images/item2.jpg" alt="Стиральная машина CANDY GO3E 210 LC" /></a>
+					</div>
+					<div class="item_b">
+						<h3 class="item_name"><a href="#">Стиральная машина CANDY GO3E 210 LC</a></h3>
+						<div class="item_price">12 345 <i class="r">руб.</i></div>
+					</div>
+				</div>
+				
+				<div class="item">
+					<div class="item_t">
+						<a href="#"><img src="media/images/item1.jpg" alt="LCD телевизор LG 32LK451" /></a>
+					</div>
+					<div class="item_b">
+						<h3 class="item_name"><a href="#">LCD телевизор LG 32LK451</a></h3>
+						<div class="item_price">12 345 <i class="r">руб.</i></div>
+					</div>
+				</div>
+				
+				<div class="item">
+					<div class="item_t">
+						<a href="#"><img src="media/images/item2.jpg" alt="Стиральная машина CANDY GO3E 210 LC" /></a>
+					</div>
+					<div class="item_b">
+						<h3 class="item_name"><a href="#">Стиральная машина CANDY GO3E 210 LC</a></h3>
+						<div class="item_price">12 345 <i class="r">руб.</i></div>
+					</div>
+				</div>
+			</div><!--/items-->
+			
+			<div class="pgn">
+				<a class="curr" href="#">1</a>
+				<a href="#">2</a>
+				<a href="#">3</a>
+				<a href="#">4</a>
+			</div><!--/pgn-->
+		</div><!--/right-->
+	</div>
+    <!--/MAIN-->
+	
+	
+    <!--FOOTER-->
+    <div class="footer">
+		<div id="copyright">
+			<p>© 2012 Читамаг</p>
+			<p><span>все цены указаны в рублях</span></p>
+		</div>
+					
+		<div class="footer_menu">
+			<ul>
+				<li><a href="#">Доставка и оплата</a></li>
+				<li><a href="#">Сервис и гарантии</a></li>
+				<li><a href="#">Контакты</a></li>
+				<li class="footer_sales_lnk"><a href="#">Акции и скидки</a></li>
+			</ul>
+		</div><!--/menu-->
+
+		<div class="footer_search">
+			<form class="search_form" method="post" action="">
+				<div class="input search_input"><input type="text" placeholder="Поиск в каталоге" /></div>
+				<div class="search_submit"><input type="submit" value="" /></div>
+			</form>
+		</div>
+			
+		<a id="madein" title="Разработка сайта — студия OctoberWeb" href="http://octoberweb.ru/"><img id="octoberweb" alt="Разработка сайта — студия OctoberWeb" src="media/img/octoberweb.png" width="32" height="32"/>разработка сайта <span>OctoberWeb</span></a>
+    </div>
+    <!--/FOOTER-->
+    
+</div>
+<!--/PAGE-->
+
+</div><!--/wrapper-->
+</body>
+</html>

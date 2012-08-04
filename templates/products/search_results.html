@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% load thumbnail pages_extras products_extras orders_extras %}
+
+{% block query_text %}{{ query }}{% endblock %}
+{% block query_text_footer %}{{ query }}{% endblock %}
+
+{% block main %}
+
+    {% block_catalog_menu '' %}
+
+    <div class="right col">
+
+        <div class="page_h">
+            <h1>Результаты поиска по запросу &laquo;{{ query }}&raquo;</h1>
+        </div>
+
+        {% include 'products/products_list.html' %}
+
+    </div>
+
+
+{% endblock %}

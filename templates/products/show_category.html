@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% load thumbnail pages_extras products_extras %}
+
+{% block title %}
+    {{ category.title }} &mdash;
+{% endblock %}
+
+{% block main %}
+    {% block_catalog_menu category.id %}
+
+    <div class="right col">
+        <div class="bread">
+            {% if is_subcat %}
+                <a href="{{  category.parent.get_absolute_url }}">{{ category.parent.title }}</a> /
+            {% else %}
+                <a href="{{  category.get_absolute_url }}">{{ category.title }}</a> /
+            {% endif %}
+        </div>
+
+        <div class="page_h">
+            {% if is_subcat %}
+                <h1>{{ category.title }}</h1>
+            {% endif %}
+            <span>
+                <a href="?sort=pasc{% get_request_parameters request.GET 'False' 'sort' %}">сначала дорогие</a>
+                <a href="?sort=pdesk{% get_request_parameters request.GET 'False' 'sort' %}">сначала дешёвые</a>
+            </span>
+        </div>
+
+        {% include 'products/products_list.html' %}
+
+    </div><!--/right-->
+
+
+{% endblock %}

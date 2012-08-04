@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+
+{% load thumbnail pages_extras products_extras orders_extras %}
+
+{% block main %}
+
+    {% block_catalog_menu product.category.id %}
+
+    <div class="right col">
+        <div class="bread">
+            <a href="{{ product.category.parent.get_absolute_url }}">{{ product.category.parent.title }}</a> / <a href="{{ product.category.get_absolute_url }}">{{ product.category.title }}</a>
+        </div>
+
+        <div class="page_h">
+            <h1>{{ product.title }}</h1>
+        </div>
+
+        <div class="item_page">
+            <div class="item_views_menu">
+                <ul>
+                    <li class="curr"><a href="#">Фотогалерея</a></li>
+                    <li><a href="#">Характеристики</a></li>
+                </ul>
+            </div>
+
+            <div class="item_page_l col">
+                <div class="item_gal">
+                    <div class="item_gal_zl">
+                        {% thumbnail product.image "1000" upscale=0 as big %}{{ attached_photos }}
+                        {% thumbnail product.image "241" crop="center" as im %}
+                            <a href="{{ big.url }}" class="product_img fancybox" rel="{{ product.id }}"><img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="" /></a>
+                        {% endthumbnail %}
+                        {% endthumbnail %}
+                    </div>
+
+                    {% if attached_photos %}
+                        <ul>
+                            <li class="curr">
+                                {% thumbnail product.image "49" crop="center" as im %}
+                                    <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="" />
+                                {% endthumbnail %}
+                            <div style="display: none;" class="replace_img">
+                                {% thumbnail product.image "1000" upscale=0 as big %}
+                                {% thumbnail product.image "241" crop="center" as im %}
+                                    <a href="{{ big.url }}" class="product_img fancybox"><img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="" /></a>
+                                {% endthumbnail %}
+                                {% endthumbnail %}
+                            </div>
+                            </li>
+
+                            {% for photo in attached_photos %}
+                                <li>
+                                    {% thumbnail photo.image "49" crop="center" as im %}
+                                        <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="" />
+                                    {% endthumbnail %}
+                                    <div style="display: none;" class="replace_img">
+                                        {% thumbnail photo.image "1000" upscale=0 as big %}
+                                        {% thumbnail photo.image "241" crop="center" as im %}
+                                            <a href="{{ big.url }}" class="product_img fancybox" rel="{{ product.id }}"><img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="" /></a>
+                                        {% endthumbnail %}
+                                        {% endthumbnail %}
+                                    </div>
+                                </li>
+                            {% endfor %}
+
+                        </ul>
+                    {% endif %}
+                </div><!--/item_gal-->
+                {% if other_feature_groups %}
+                    {% for feature_group in other_feature_groups %}
+                        {% if feature_group.features_values %}
+                            <div class="params" style="display: none;">
+                                <h3>{{ feature_group.title }}</h3>
+                                {% for feature in feature_group.features_values %}
+                                    <div class="param">
+                                        <div class="param_name">{{ feature.title }}</div>
+                                        <div class="param_val">{{ feature.value }}</div>
+                                    </div>
+                                {% endfor %}
+                            </div><!--/params-->
+                        {% endif %}
+                    {% endfor %}
+                {% else %}
+                    <div class="params" style="display: none;">
+                        <h3>Дополнительные характеристики не указаны</h3>
+                    </div><!--/params-->
+                {% endif %}
+
+
+            </div><!--/item_page_l-->
+
+            <div class="item_page_r col">
+                <div class="main_params">
+                    {% if base_feature_group %}
+                        <h3>{{ base_feature_group.title }}</h3>
+                        <div class="main_param">
+                            {% for feature  in base_feature_group.features_values %}
+                                <div class="main_param_name"><span>{{ feature.title }}</span></div>
+                                <div class="main_param_val">{{ feature.value }}</div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <h3>Общие характеристики не указаны</h3>
+                    {% endif %}
+                </div><!--/main_params-->
+
+                <div class="all_params_lnk"><a class="dash" href="#">все характеристики</a></div>
+
+                {% if product.price_old %}
+                    <div class="oldprice"><span>{{ product.get_str_price_old }} руб.</span></div>
+                {% endif %}
+
+                <div class="item_page_price">
+                    <span class="item_page_price_val">{{ product.get_str_price }}</span> <i class="r">руб.</i>
+                    <input class="btn2 buy_btn" type="button" value="Купить онлайн" name="{{ product.id }}" />
+                    <div class="item_page_price_b"></div>
+                </div>
+
+                <div class="one_click">
+                    <a class="btn1 one_click_btn fancybox" href="#oneclick_form">Купить в 1 клик</a>
+                    <div class="one_click_note">Потребуется ввести только номер телефона</div>
+                </div>
+
+                <div style="display: none;">
+                    {% include 'products/one_clk_form.html' %}
+                </div>
+
+            </div><!--/item_page_r-->
+
+        </div><!--/item_page-->
+    </div><!--/right-->
+
+    {% if product.get_related_products %}
+        <div class="left col">
+            <div class="arr_zl">Похожие модели</div>
+        </div><!--/left-->
+
+        <div class="right col">
+            {% include 'products/products_list.html' %}
+        </div><!--/right-->
+    {% endif %}
+
+{% endblock %}

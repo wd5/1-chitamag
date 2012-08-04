@@ -1,0 +1,27 @@
+{% if is_paginated %}
+	{% load i18n %}
+	<div class="pgn">
+
+		{% comment %}{% if page_obj.has_previous %}
+			<a class="pgn_l pgn_inactive" href="?page={{ page_obj.previous_page_number }}{{ getvars }}{{ hashtag }}"></a>
+		{% endif %}{% endcomment %}
+
+		{% for page in pages %}
+
+			{% if page %}
+				{% ifequal page page_obj.number %}
+					<a class="curr" href="?page={{ page }}{{ getvars }}{{ hashtag }}">{{ page }}</a>
+				{% else %}
+					<a href="?page={{ page }}{{ getvars }}{{ hashtag }}">{{ page }}</a>
+				{% endifequal %}
+			{% else %}
+				...
+			{% endif %}
+		{% endfor %}
+
+		{% comment %}{% if page_obj.has_next %}
+			<a class="pgn_r" href="?page={{ page_obj.next_page_number }}{{ getvars }}{{ hashtag }}"></a>
+		{% endif %}{% endcomment %}
+
+	</div>
+{% endif %}

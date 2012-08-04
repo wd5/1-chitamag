@@ -1,0 +1,50 @@
+
+---http://ontpay.info/te/test/groups2.xsql
+<result>
+ <ROWSET>
+  <ROW num="16" name="���� ������ USB" id="91072037" up_id="1961">
+   <paramgrp name="����� ��������">
+    <�������� ���="�����" �����="Gb"></��������>
+    <�������� ���="�������� ������" �����="Kbps"/>
+    <�������� ���="�������� ������" �����="Kbps"/>
+   </paramgrp>
+   <paramgrp name="additional feature">
+    <��������/>
+    <��������/>
+    <��������/>
+   </paramgrp>
+  </ROW>
+...
+
+
+----http://ontpay.info/te/test/goods.xsql
+<result>
+<ROWSET>
+ <ROW num="1" name="SanDisk 2342345" code="500" price="9999.99" grp_id="32" superprice="Y" discountmax="20" action="�������� �����">
+  <�������� ���="�����" ��������="4"></��������>
+  <�������� ���="�������� ������" ��������="1200"></��������>
+  <�������� ���="�������� ������" ��������="200"></��������>
+  <��������>������������� ��������</��������>
+  <��������>������ �� ���������</��������>
+  <��������>��� ������� � ��� ����� ��� ������ � ������� �����, ����� ���� ����� ���</��������>
+  <img default="yes">http://kartinca.com/1235345.jpg</img>
+  <img>http://kartinca.com/1235346.jpg</img>
+  <img>http://kartinca.com/1235347.jpg</img>
+ </ROW>
+ <ROW num="2" name="Electrolux ZAC 6725" code="550" price="9999.99" grp_id="22"/>
+...
+
+--�����.xml
+<actions>
+<action name="�������� �����">
+  <title>���� 8 ������������� � ������ ������ � �������</title>
+  <descriotion>
+	��������������������� ��������� ������� ������� ������� ����
+  </descriotion>
+  <img>http://kartinca.com/1235387.jpg</img>
+</action>
+<action name="�������� �����">
+....
+</action>
+
+</actions>

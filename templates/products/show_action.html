@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% load thumbnail siteblocks_extras products_extras %}
+
+{% block title %}
+    Акции и скидки &mdash;
+{% endblock %}
+
+{% block sales_class_curr %} sales_teaser_curr{% endblock %}
+
+{% block main %}
+    {% block_catalog_menu '' %}
+
+    <div class="right col">
+        <div class="sales">
+            <h1>{{ action.title }}</h1>
+
+            <div class="sale">
+                {{ action.description|safe }}
+            </div>
+
+        </div><!--/sales-->
+    </div><!--/right-->
+
+{% endblock %}

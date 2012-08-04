@@ -1,0 +1,36 @@
+msgid "Orders"
+msgstr "Заказы"
+
+msgid "orders"
+msgstr "заказы"
+
+msgid "cart"
+msgstr "корзина"
+
+msgid "carts"
+msgstr "корзина"
+
+msgid "product_item"
+msgstr "товар"
+
+msgid "product_items"
+msgstr "товары"
+
+msgid "order_item"
+msgstr "заказ"
+
+msgid "order_items"
+msgstr "заказы"
+
+msgid "oneclk_item"
+msgstr "заказ"
+
+msgid "oneclk_items"
+msgstr "купить в один клик"
+
+msgid "service_item"
+msgstr "услуга"
+
+msgid "service_items"
+msgstr "услуги к продуктам"
+

@@ -1,0 +1,23 @@
+{% if menu %}
+<div class="left col">
+    <div class="catalog_menu">
+        <ul>
+            {% for item in  menu %}
+                <li>
+                    <div class="catalog_menu_1{% if item.id == parent_id %} curr{% endif %}"><a href="{{ item.get_absolute_url }}">{{ item.title }}</a></div>
+
+                    {% if item.id == parent_id %}
+                        {% if item.get_children %}
+                            <ul class="catalog_submenu">
+                                {% for child in item.get_children %}
+                                    <li{% if child.id == child_id %} class="curr"{% endif %}><a href="{{ child.get_absolute_url }}">{{ child.title }}</a><span></span></li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div><!--/left-->
+{% endif %}

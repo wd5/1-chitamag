@@ -1,0 +1,158 @@
+{% load thumbnail pagination_tags i18n products_extras %}
+
+{% if not product %}
+    {% if is_index %}
+        <div class="items">
+                {% for item in hit_products %}
+                    <div class="item">
+                         <div class="item_t">
+                             <a href="{{ item.get_absolute_url }}">
+                                 {% thumbnail item.image "116" crop="center" as im %}
+                                    <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="{{ item.title }}" />
+                                 {% endthumbnail %}
+                             </a>
+                             {% if item.is_hit or item.is_new or item.is_discount %}
+                                 <div class="item_labels">
+                                     {% if item.is_discount %}
+                                         <div class="item_label_1"><span>Скидка</span></div>
+                                     {% endif %}
+                                     {% if item.is_new %}
+                                         <div class="item_label_2"><span>Новинка</span></div>
+                                     {% endif %}
+                                 </div>
+                             {% endif %}
+                         </div>
+                         <div class="item_b">
+                             <h3 class="item_name"><a href="{{ item.get_absolute_url }}">{{ item.category.title_singular|title }} {{ item.title }}</a></h3>
+                             <div class="item_price">{{ item.get_str_price }} <i class="r">руб.</i></div>
+                         </div>
+                    </div>
+                {% endfor %}
+            </div><!--/items-->
+    {% else %}
+        <div class="items">
+
+            {% if not query %}                
+                <div class="filters">
+                {% if category.manufacturers %}
+                    <div class="filter">
+                        <div class="filter_h">Производители</div>
+                        <ul class="filter_brands">
+                            {% for item in category.manufacturers %}
+                                <li{% if mfr == item.id %} class="curr"{% endif %}><a href="#" name="{{ item.id }}">{{ item.title }}</a></li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+
+                <div class="filter">
+                    <div class="filter_h">Цена</div>
+                    <div class="filter_price">
+                        До <span class="input filter_price_input"><input type="text" value="{{ price_filter|default:max_price|floatformat:0 }}" /></span> руб.
+                        <div id="filter_price_slider"></div>
+                    </div>
+                    <script type="text/javascript">
+                        SetPriceSlider({{ min_price|floatformat:0 }},{{ max_price|floatformat:0 }},{{ price_filter|default:max_price|floatformat:0 }});
+                    </script>
+                </div>
+                {{ feature_values }}
+                {% if is_subcat %} {# если не подкатегория - линамические фильтры не выводим #}
+                    {% for parameter in filter_parameters %}
+                        {% if parameter.values %}
+                            <div class="filter">
+                                <div class="filter_h">{{ parameter.title }}</div>
+                                <ul class="filter_params" name="{{ parameter.id }}">
+                                    {% for value in parameter.values %}
+                                        <li {% if parameter.selected == value.value %}class="curr"{% endif %} ><a href="#">{{ value.value }}</a></li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+                {% comment %}<div class="filter_submit"><input class="btn1 filter_submit_btn" type="submit" value="Применить" /></div>{% endcomment %}
+                <div class="filter_submit"><a class="btn1 filter_submit_btn" href="{% get_request_parameters request.GET 'True' '' %}">Применить</a></div>
+
+                <div class="filters_b"></div>
+            </div><!--/filters-->
+            {% endif %}
+        
+            {% autopaginate catalog 12 %}
+                {% for item in catalog %}
+                    <div class="item">
+                         <div class="item_t">
+                             <a href="{{ item.get_absolute_url }}">
+                                 {% thumbnail item.image "116" crop="center" as im %}
+                                    <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="{{ item.title }}" />
+                                 {% endthumbnail %}
+                             </a>
+                             {% if item.is_hit or item.is_new or item.is_discount %}
+                                 <div class="item_labels">
+                                      {% if item.is_discount %}
+                                          <div class="item_label_1"><span>Скидка</span></div>
+                                      {% endif %}
+                                      {% if item.is_new %}
+                                          <div class="item_label_2"><span>Новинка</span></div>
+                                      {% endif %}
+                                      {% if item.is_hit %}
+                                          <div class="item_label_3"><span>Хит продаж</span></div>
+                                      {% endif %}
+                                  </div>
+                             {% endif %}
+                         </div>
+                         <div class="item_b">
+                             <h3 class="item_name"><a href="{{ item.get_absolute_url }}">{{ item.category.title_singular|title }} {{ item.title }}</a></h3>
+                             <div class="item_price">{{ item.get_str_price }} <i class="r">руб.</i></div>
+                         </div>
+                    </div>
+                {% empty %}
+                    {% if query %}
+                        <div class="item">
+                            Поиск не дал результатов. Попробуйте изменить поисковый запрос.
+                        </div>
+                    {% else %}
+                        <div class="item">
+                            В данной категории пока нет товаров.
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            {% paginate %}
+
+        </div><!--/items-->
+
+    {% endif %}
+
+{% else %}
+
+    <div class="items">
+        {% for item in product.get_related_products %}
+            <div class="item">
+                 <div class="item_t">
+                     <a href="{{ item.get_absolute_url }}">
+                         {% thumbnail item.image "116" crop="center" as im %}
+                            <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="{{ item.title }}" />
+                         {% endthumbnail %}
+                     </a>
+                     {% if item.is_hit or item.is_new or item.is_discount %}
+                         <div class="item_labels">
+                             {% if item.is_discount %}
+                                 <div class="item_label_1"><span>Скидка</span></div>
+                             {% endif %}
+                             {% if item.is_new %}
+                                 <div class="item_label_2"><span>Новинка</span></div>
+                             {% endif %}
+                             {% if item.is_hit %}
+                                 <div class="item_label_3"><span>Хит продаж</span></div>
+                             {% endif %}
+                         </div>
+                     {% endif %}
+                 </div>
+                 <div class="item_b">
+                     <h3 class="item_name"><a href="{{ item.get_absolute_url }}">{{ item.category.title_singular|title }} {{ item.title }}</a></h3>
+                     <div class="item_price">{{ item.get_str_price }} <i class="r">руб.</i></div>
+                 </div>
+            </div>
+        {% endfor %}
+    </div><!--/items-->
+
+{% endif %}

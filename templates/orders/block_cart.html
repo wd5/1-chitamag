@@ -1,0 +1,21 @@
+{% if is_empty %}
+    <div class="cartbox">
+    	<div class="cartbox_empty">
+    		<div class="cartbox_h">Ваш заказ</div>
+    		<p>Пока пуст</p>
+    	</div>
+    </div>
+{% else %}
+    <div class="cartbox">
+        <div class="cartbox_full">
+            <div class="cartbox_h"><a href="/cart/">Ваш заказ</a></div>
+            <div>
+                <p>{{ cart_products_count }} {{ cart_products_text }} на</p>
+                <p><b>{{ cart_total }}</b> <i class="r">руб.</i></p>
+            </div>
+        </div>
+    </div>
+{% endif %}
+
+
+
