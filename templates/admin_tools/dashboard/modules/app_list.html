@@ -19,4 +19,15 @@
             {% endfor %}
         </ul>
         {% endfor %}
+
+        {% ifnotequal module.title 'Администрирование' %}
+            <h3><a>Импорт данных из XML</a></h3>
+                {{ xml_sys_message }}
+                <ul>
+                <li><form action="/admin/upload_xml/" method="POST" enctype="multipart/form-data">
+                    Выберите xml файл: <input type="file" name="file" />
+                    <input type="submit" value="Загрузить" />
+            </form></li></ul>
+        {% endifnotequal %}
+
 {% endblock %}

@@ -21,7 +21,7 @@
                     <div class="sale">
                         <div class="sale_img">
                             <a href="/actions/{{ action.id }}/">
-                            {% thumbnail action.image "168x100" crop="center" as im %}
+                            {% thumbnail action.image "x100" as im %}
                                 <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="" />
                             {% endthumbnail %}
                             </a>
@@ -41,7 +41,7 @@
                     <div class="sale">
                         <div class="sale_img">
                             <a href="/actions/{{ action.id }}/">
-                            {% thumbnail action.image "168x100" crop="center" as im %}
+                            {% thumbnail action.image "x100" as im %}
                                 <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="" />
                             {% endthumbnail %}
                             </a>

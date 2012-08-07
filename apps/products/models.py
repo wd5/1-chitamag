@@ -51,9 +51,12 @@ class Category(MPTTModel):
     parent = TreeForeignKey('self', verbose_name=u'Родительская категория', related_name='children', blank=True, null=True, on_delete=models.SET_NULL)
     order = models.IntegerField(verbose_name=u'Порядок сортировки',default=10)
     is_published = models.BooleanField(verbose_name = u'Опубликовано', default=True)
+    # XML
+    xml_id = models.IntegerField(verbose_name=u'id из файла xml', blank=True, null=True)
+    xml_num = models.IntegerField(verbose_name=u'num из файла xml', blank=True, null=True)
+    xml_up_id= models.IntegerField(verbose_name=u'up_id из файла xml', blank=True, null=True)
 
     parent.custom_filter_spec = True
-
     # Managers
     objects = TreeManager()
 
@@ -88,6 +91,10 @@ class Category(MPTTModel):
             return products
         else:
             return self.product_set.published()
+
+    def get_feature_names(self):
+        name_set = FeatureNameCategory.objects.published().filter(feature_group__category__id=self.id)
+        return name_set
 
     def get_all_feature_groups(self):
         return self.featuregroup_set.published()
@@ -143,8 +150,8 @@ status_choices = (
     )
 
 class Product(models.Model):
-    category = models.ForeignKey(Category, verbose_name=u'Категория',)
-    manufacturer = models.ForeignKey(Manufacturer, verbose_name=u'производитель')
+    category = models.ForeignKey(Category, verbose_name=u'Категория', blank=True, null=True)
+    manufacturer = models.ForeignKey(Manufacturer, verbose_name=u'производитель', blank=True, null=True)
     title = models.CharField(verbose_name=u'название', max_length=400)
     image = ImageField(verbose_name=u'изображение', upload_to=file_path_Product)
     description = models.TextField(blank=True, verbose_name=u'описание')
@@ -153,15 +160,18 @@ class Product(models.Model):
 
     status = models.CharField(u'статус товара', choices=status_choices, max_length=20)
 
-    is_hit = models.BooleanField(verbose_name = u'Хит', default=True)
-    is_new = models.BooleanField(verbose_name = u'Новинка', default=True)
-    is_discount = models.BooleanField(verbose_name = u'Скидка', default=True)
-    in_slider = models.BooleanField(verbose_name = u'отображать в слайдере на главной', default=True)
+    is_hit = models.BooleanField(verbose_name = u'Хит', default=False)
+    is_new = models.BooleanField(verbose_name = u'Новинка', default=False)
+    is_discount = models.BooleanField(verbose_name = u'Скидка', default=False)
+    in_slider = models.BooleanField(verbose_name = u'отображать в слайдере на главной', default=False)
 
     related_products = models.ManyToManyField("self", verbose_name=u'Похожие товары', blank=True, null=True,)
 
     order = models.IntegerField(verbose_name=u'Порядок сортировки',default=10)
     is_published = models.BooleanField(verbose_name = u'Опубликовано', default=True)
+
+    # XML
+    xml_num = models.IntegerField(verbose_name=u'номер из файла xml', blank=True, null=True)
 
     category.custom_filter_spec = True
 
