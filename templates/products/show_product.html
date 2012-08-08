@@ -26,7 +26,7 @@
             <div class="item_page_l col">
                 <div class="item_gal">
                     <div class="item_gal_zl">
-                        {% thumbnail product.image "1000" upscale=0 as big %}{{ attached_photos }}
+                        {% thumbnail product.image "1000" upscale=0 as big %}
                         {% thumbnail product.image "241" crop="center" as im %}
                             <a href="{{ big.url }}" class="product_img fancybox" rel="{{ product.id }}"><img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="" /></a>
                         {% endthumbnail %}
