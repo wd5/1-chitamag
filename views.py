@@ -145,7 +145,7 @@ def upload_xml(request):
                 parsed = ''
                 if rows_array: # если есть элемент ROW - то проверяем что пришло - товар или категория
                     for z in rows_array:
-                        if z.getAttribute('up_id'): # парсим категорию
+                        if z.getAttribute('up_id') or not z.getAttribute('grp_id'): # парсим категорию
                             parsed = 'category'
                             cat_title = z.getAttribute('name')
                             cat_slug = slugify(cat_title)
@@ -158,10 +158,21 @@ def upload_xml(request):
                             except:
                                 exits_cat = False
 
+                            try:
+                                parent_cat = Category.objects.get(xml_id=int(cat_up_id))
+                            except:
+                                parent_cat = False
+
                             new_category = False
                             if not exits_cat: # если категории с таким же xml_id не существует
-                                new_category = Category(title=cat_title, slug=cat_slug, is_published=False,
-                                    xml_id=cat_xml_id, xml_num=cat_xml_num, xml_up_id=cat_up_id)
+                                if parent_cat:
+                                    new_category = Category(parent=parent_cat, title=cat_title, slug=cat_slug,
+                                        is_published=False,
+                                        xml_id=cat_xml_id, xml_num=cat_xml_num, xml_up_id=cat_up_id)
+                                else:
+                                    new_category = Category(title=cat_title, slug=cat_slug,
+                                        is_published=False,
+                                        xml_id=cat_xml_id, xml_num=cat_xml_num, xml_up_id=cat_up_id)
                                 new_category.save()
 
                             if new_category: # если категория создана - то проверяем и создаём группы параметров и параметры
@@ -175,11 +186,11 @@ def upload_xml(request):
                                             new_paramgrp.save()
                                         if new_paramgrp:
                                             parameter_array = paramgrp.getElementsByTagName(
-                                                'parameter') # todo: имена изменятся на английские!
+                                                'parameter')
                                             if parameter_array:
                                                 for parameter in parameter_array:
                                                     parameter_name = parameter.getAttribute(
-                                                        'name') # todo: имена изменятся на английские!
+                                                        'name')
                                                     if parameter_name != '': # создаём параметры
                                                         new_parameter = FeatureNameCategory(title=parameter_name,
                                                             feature_group=new_paramgrp)
@@ -191,7 +202,10 @@ def upload_xml(request):
                             product_title = z.getAttribute('name')
                             #product_xml_code = z.getAttribute('code')
                             product_price = Decimal(z.getAttribute('price'))
-                            product_description = z.getElementsByTagName('description')[0].firstChild.nodeValue
+                            try:
+                                product_description = z.getElementsByTagName('description')[0].firstChild.nodeValue
+                            except:
+                                product_description = u''
                             grp_id = z.getAttribute('grp_id')
                             #superprice = z.getAttribute('superprice')
                             #discountmax = z.getAttribute('discountmax')
@@ -225,52 +239,60 @@ def upload_xml(request):
                             if new_product: # если продукт создан - то проверяем и создаём свойства, значения параметров, картинки
                                 # значения параметров
                                 parameter_array = z.getElementsByTagName(
-                                    'parameter') # todo: имена изменятся на английские!
+                                    'parameter')
                                 if parameter_array and prod_category: # если в xml есть теги parameter и определена категория товара
                                     for parameter in parameter_array:
                                         parameter_name = parameter.getAttribute(
-                                            'name') # todo: имена изменятся на английские!
+                                            'name')
+                                        parameter_name_grp_title = parameter.getAttribute(
+                                            'paramgrp')
                                         parameter_value = parameter.getAttribute('value')
-                                        if parameter_name != '' and parameter_value != '': # создаём значения параметров
+                                        if parameter_name != '' and parameter_value != '' and parameter_name_grp_title != '': # создаём значения параметров
                                             try:
-                                                parameter_model_object = category_feature_names.get(title=parameter_name)
+                                                parameter_model_object = category_feature_names.get(
+                                                    feature_group__title__exact=parameter_name_grp_title,
+                                                    title=parameter_name)
                                             except:
                                                 parameter_model_object = False
                                             if parameter_model_object:
                                                 new_parameter_value = FeatureValue(product=new_product,
                                                     feature_name=parameter_model_object, value=parameter_value)
                                                 new_parameter_value.save()
-                                # значения свойств
-                                property_array = z.getElementsByTagName('property') # todo: имена изменятся на английские!
+                                                # значения свойств
+                                property_array = z.getElementsByTagName(
+                                    'property')
                                 if property_array:
                                     for property in property_array:
                                         property_value = property.firstChild.nodeValue
-                                        new_property = ProductProperty(product = new_product, value = property_value)
+                                        new_property = ProductProperty(product=new_product, value=property_value)
                                         new_property.save()
-                                # изображения товара
-                                img_array = z.getElementsByTagName('img') # todo: имена изменятся на английские!
+                                        # изображения товара
+                                img_array = z.getElementsByTagName('img')
                                 if img_array:
                                     for img in img_array:
                                         img_link = img.firstChild.nodeValue
                                         img_is_default = img.getAttribute('default')
-                                        if img_is_default=='yes' and img_link!='': # сохраняем как главное изображение товара
+                                        if img_is_default == 'yes' and img_link != '': # сохраняем как главное изображение товара
                                             # Save image
                                             img_temp = NamedTemporaryFile(delete=True)
                                             try:
                                                 img_temp.write(urlopen(img_link).read())
                                                 img_temp.flush()
-                                                new_product.image.save(u"product_image_%s" % new_product.pk, File(img_temp))
+                                                new_product.image.save(u"product_image_%s" % new_product.pk,
+                                                    File(img_temp))
                                                 new_product.save()
                                             except:
                                                 pass
-                                        elif img_link!='':
+                                        elif img_link != '':
                                             img_temp = NamedTemporaryFile(delete=True)
-                                            new_image = ProductImage(product = new_product)
+                                            new_image = ProductImage(product=new_product)
                                             try:
                                                 img_temp.write(urlopen(img_link).read())
                                                 img_temp.flush()
-                                                new_image = ProductImage(product = new_product)
-                                                new_image.image.save(u"product_image_%s-%s" % (new_product.pk, new_image.pk), File(img_temp))
+                                                new_image = ProductImage(product=new_product)
+                                                new_image.image.save(
+                                                    u"product_image_%s-%s" % (new_product.pk, new_image.pk),
+                                                    File(img_temp))
                                                 new_image.save()
                                             except:
                                                 pass

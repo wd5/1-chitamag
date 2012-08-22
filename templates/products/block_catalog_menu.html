@@ -10,7 +10,9 @@
                         {% if item.get_children %}
                             <ul class="catalog_submenu">
                                 {% for child in item.get_children %}
+                                    {% if child.is_published %}
                                     <li{% if child.id == child_id %} class="curr"{% endif %}><a href="{{ child.get_absolute_url }}">{{ child.title }}</a><span></span></li>
+                                    {% endif %}
                                 {% endfor %}
                             </ul>
                         {% endif %}

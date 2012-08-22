@@ -114,17 +114,19 @@ h3 {
 	background: url('../img/els.png') no-repeat;
 	font: bold 18px/18px 'PT Sans', Arial, Helvetica, sans-serif;
 	text-decoration: none;
+	text-align: center;
 	border: none;
 	display: inline-block;
 	height: 41px;
 	padding: 0 0 8px 0;
 }
-.btn1 {
-	text-shadow: 0 1px 0 #103649;
+a.btn1, a.btn2 {
+	padding: 5px 0 0 0;
+	height: 36px;
 }
-.btn2 {
-	text-shadow: 0 1px 0 #52751b;
-}
+a.btn1:hover, a.btn2:hover {color: #fff;}
+.btn1 {text-shadow: 0 1px 0 #103649;}
+.btn2 {text-shadow: 0 1px 0 #52751b;}
 /*-----------------MAIN-STYLES-END-----------------*/
 
 
