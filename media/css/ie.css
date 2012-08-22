@@ -24,7 +24,10 @@
 .order_type_text,
 .sale_img, .sale_des,
 .footer_menu li,
-.promo_4_l, .promo_4_r {
+.promo_4_l, .promo_4_r,
+.cabinet_info,
+.history_status,
+.cart_option_qty ul, .cart_option_qty li {
 	*display:inline;
 	*zoom:1;
 }

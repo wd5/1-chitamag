@@ -10,8 +10,9 @@
     {% block_catalog_menu '' %}
     <div class="right col">
         <div class="promos">
+            <div class="slider">
             {% for product in slider_products %}
-                <div class="promo_1" {% if not forloop.first %}style="display: none;"{% endif %} >
+                <div class="promo_1{% if forloop.first %} curr_slide{% endif %}">
                     <a class="promo_a" href="{{ product.get_absolute_url }}">
                         <div class="promo_1_l col">
                             <h2 class="promo_item_name">{{ product.title }}</h2>
@@ -34,7 +35,7 @@
                     </a>
                 </div>
             {% endfor %}
-
+            </div>
             {% if small_discounts %}
                 {% for discount_product in small_discounts %}
                     <div class="{% cycle 'promo_2' 'promo_3' %}">
@@ -94,6 +95,9 @@
                     </div>
                 {% endfor %}
             {% endif %}
+
+            <a class="promo_arr_l" href="#"></a>
+            <a class="promo_arr_r" href="#"></a>
 
             {% comment %}<div class="promo_4">
                 <a class="promo_a" href="#">

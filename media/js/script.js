@@ -212,6 +212,62 @@ $(function(){
     });
 
 
+    // слайдер на главной
+
+    function SlideToLeft()
+    {
+        var curr_slide = $('div.curr_slide')
+        if (curr_slide.prev().html())
+            {
+                curr_slide.toggleClass('curr_slide');
+                curr_slide.prev().toggleClass('curr_slide');
+            }
+        else
+            {
+                curr_slide.toggleClass('curr_slide');
+                curr_slide.parent().children().last().toggleClass('curr_slide');
+            }
+    }
+
+    function SlideToRight()
+    {
+        var curr_slide = $('div.curr_slide')
+        if (curr_slide.next().html())
+            {
+                curr_slide.toggleClass('curr_slide');
+                curr_slide.next().toggleClass('curr_slide');
+            }
+        else
+            {
+                curr_slide.toggleClass('curr_slide');
+                curr_slide.parent().children().first().toggleClass('curr_slide');
+            }
+    }
+
+    var myTimer = 0
+
+    function SlidePromos(){
+       clearInterval(myTimer);
+       myTimer = setInterval( function(){SlideToRight();} , 7000)
+       myTimer;
+    }
+
+    SlidePromos();
+
+    $('a.promo_arr_l').live('click',function(){
+        SlideToLeft();
+        SlidePromos();
+        return false;
+    });
+
+    $('a.promo_arr_r').live('click',function(){
+        SlideToRight();
+        SlidePromos();
+        return false;
+    });
+
+
+
 
     //Анимация корзины при изменении
     function animate_cart(){
