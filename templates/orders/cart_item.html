@@ -1,55 +1,96 @@
-{% load thumbnail %}
-<div class="cart_item{% if cart_item.is_deleted %} cart_item_deleted{% endif %}{% if loaded %} loaded{% endif %}" {% if loaded %}style="display: none;"{% endif %}>
-
-    {% if loaded %}
-        <input type="hidden" id="cart_str_total" value="{{ cart_str_total }}">
-    {% endif %}
-
-    <div class="cart_img">
-        {% thumbnail cart_item.product.image "120x120" crop="center" as im %}
-            <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="" />
+{% load thumbnail siteblocks_extras %}
+<div class="cart_item{% if loaded %} loaded{% endif %}" {% if loaded %}style="display: none;"{% endif %}>
+    <input type="hidden" class="cart_item_id" value="{{ cart_item.id }}">
+    <div class="cart_img col">
+        {% thumbnail cart_item.product.image "151" crop="center" as im %}
+            <img src="{{ im.url }}" width="{{ im.width }}" alt="" />
         {% endthumbnail %}
+        {% if cart_item.product.is_hit or cart_item.product.is_new or cart_item.product.is_discount %}
+             <div class="item_labels">
+                  {% if cart_item.product.is_discount %}
+                      <div class="item_label_1"><span>Скидка</span></div>
+                  {% endif %}
+                  {% if cart_item.product.is_new %}
+                      <div class="item_label_2"><span>Новинка</span></div>
+                  {% endif %}
+                  {% if cart_item.product.is_hit %}
+                      <div class="item_label_3"><span>Хит продаж</span></div>
+                  {% endif %}
+              </div>
+         {% endif %}
     </div>
-    <div class="cart_des">
-        <h3 class="item_name"><a href="{{ cart_item.product.get_absolute_url }}">{{ cart_item.product.title }}</a></h3>
-            <div class="item_art">{% if cart_item.product.art %}«{{ cart_item.product.art }}»{% endif %}</div>
-
-        <div class="cart_size"><strong>Размер:</strong> <span class="size_blk">{{ cart_item.size.value }}</span>
-            {% if cart_item.product.get_sizes|length > 1 %}
-                <div class="item_sizes" style="display: none;">
-                    <ul>
-                        {% for size in cart_item.product.get_sizes %}
-                            <li {% if size.id == cart_item.size.id %}class="curr"{% endif %} ><a href="#" name="{{ size.id }}">{{ size.value }}</a></li>
-                        {% endfor %}
-                    </ul>
-                </div><a href="#" class="cart_size_lnk">изменить</a>
+    <div class="cart_des col">
+        <div class="cart_name">
+            <p>Товар</p>
+            <h3><a href="{{ cart_item.product.get_absolute_url }}">{{ cart_item.product.title }}</a></h3>
+            {% if cart_item.product.status == 'in_stock' %}
+                <div class="available">есть в наличии</div>
+            {% else %}
+                <div class="notavailable">под заказ</div>
             {% endif %}
         </div>
-        {% if cart_item.product.get_sizes|length > 1 %}
-            <div class="cart_add_other" style="display: none;"><a href="#" rel="{{ cart_item.id }}"><span>такой же товар, но другого размера</span></a></div>
-        {% endif %}
-    </div>
-    <div class="cart_qty">
-        <div><input class="btn2 cart_qty_btn" type="button" value="{{ cart_item.count }}" /></div>
 
-        <div class="cart_qty_modal" style="display: none;">
-            <h3>Изменить количество</h3>
-            <input type="hidden" class="initial_count" value="{{ cart_item.count }}">
-            <input type="hidden" class="cart_qty_item_id" value="{{ cart_item.id }}">
-            <p><span class="cart_qty_price"><span>{{ cart_item.product.get_str_price }}</span> руб.</span> × <input class="cart_qty_modal_text" type="text" value="{{ cart_item.count }}"/> = <span class="cart_qty_total_price"><span>{{ cart_item.get_str_total }}</span> руб.</span></p>
-            <div><input class="cart_qty_modal_ok" type="button" value="Сохранить" /> <input class="cart_qty_modal_cancel" type="button" value="Отменить" /></div>
+        <div class="cart_qty">
+            <p>Количество</p>
+            <div><input class="btn2 cart_qty_btn" type="button" value="{{ cart_item.count }}" /></div>
+            <div class="cart_qty_modal" style="display: none;">
+                <h3>Изменить количество</h3>
+                <input type="hidden" class="initial_count" value="{{ cart_item.count }}">
+                <input type="hidden" class="cart_qty_item_id" value="{{ cart_item.id }}">
+                <p><span class="cart_qty_price"><span>{{ cart_item.product.price|floatformat:0 }}</span> руб.</span> × <input class="cart_qty_modal_text" type="text" value="{{ cart_item.count }}"/> = <span class="cart_qty_total_price"><span>{{ cart_item.get_str_total }}</span> руб.</span></p>
+                <div><input class="cart_qty_modal_ok" type="button" value="Сохранить" /> <input class="cart_qty_modal_cancel" type="button" value="Отменить" /></div>
+            </div>
         </div>
 
-    </div>
-    <div class="cart_price">
-        <div class="item_price">{{ cart_item.get_str_total }} <span>руб.</span></div>
-        <div class="cart_price_del"><a href="#" class="delete_cart_id" rel="{{ cart_item.id }}">удалить</a></div>
+        <div class="cart_price">
+            <p>Цена</p>
+            <span class="cart_price_val">{{ cart_item.get_str_total }}</span> <i class="r">руб.</i>
+        </div>
+
+        {% if cart_item.product.category.get_services %}
+            <div class="cart_options">
+
+                {% for service in cart_item.get_prod_services %}
+                    <div class="cart_option {% if service.count %} cart_option_checked{% endif %} ">
+                        <input type="hidden" class="id_serv" value="{{ service.id }}">
+                        <input type="hidden" class="service_count" value="{{ service.count }}">
+
+                        <div class="cart_option_name">
+                            <p>{{ service.description }}</p>
+                            <p class="cart_option_price">Цена — {{ service.get_str_price }} руб.</p>
+                        </div>
+
+                        {% if service.count %}
+                            <div class="cart_option_qty col">
+                                <ul style="display: none;">
+                                    {% if cart_item.count > 1 %}
+                                        {% for num in cart_item.count|get_range %}
+                                            <li{% if forloop.counter == service.count %} class="curr"{% endif %}><a class="dot" href="#" name="{{ forloop.counter }}">{{ forloop.counter }}</a></li>
+                                        {% endfor %}
+                                    {% endif %}
+                                </ul>
+                            </div>
+                            <div class="cart_price"><span class="cart_price_val">{{ service.str_price }}</span> <i class="r">руб.</i></div>
+                        {% else %}
+                            <div class="cart_option_qty col">
+                                <ul style="display: none;">
+                                    {% if cart_item.count > 1 %}
+                                        {% for num in cart_item.count|get_range %}
+                                            <li><a class="dot" href="#" name="{{ forloop.counter }}">{{ forloop.counter }}</a></li>
+                                        {% endfor %}
+                                    {% endif %}
+                                </ul>
+                            </div>
+                            <div class="cart_price"><span class="cart_price_val">{{ service.get_str_price }}</span> <i class="r">руб.</i></div>
+                        {% endif %}
+
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
     </div>
 
-    <div class="ci_t"><img src="/media/img/ci_t.png" alt="" /></div>
-    <div class="ci_r"><img src="/media/img/ci_r.png" alt="" /></div>
-    <div class="ci_b"><img src="/media/img/ci_b.png" alt="" /></div>
-    <div class="ci_l"><img src="/media/img/ci_l.png" alt="" /></div>
+    <div class="cart_del"><a href="#" class="delete_cart_id" rel="{{ cart_item.id }}"></a></div>
 
-    <div class="cart_item_restore_fade" {% if not cart_item.is_deleted %}style="display: none;"{% endif %}><input class="btn2 cart_item_restore_btn" type="button" name="{{ cart_item.id }}" value="Вернуть" /></div>
+    {% if cart_item.is_deleted %}<div class="cart_item_deleted"><a class="cart_back" name="{{ cart_item.id }}" href="#">Вернуть</a></div>{% endif %}
 </div>

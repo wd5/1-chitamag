@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% load thumbnail siteblocks_extras pages_extras pytils_numeral %}
+{% load thumbnail siteblocks_extras products_extras pages_extras pytils_numeral pagination_tags %}
 
 {% if page.title %}
     {% block title %}
@@ -9,60 +9,65 @@
 {% endif %}
 
 {% block main %}
+    {% block_catalog_menu '' %}
 
-    <div class="personal_info">
-        <dl>
-            <dt>Имя и фамилия:</dt>
-            <dd>{{ user.profile.name }} {{ user.profile.last_name }}
-                {% if user.profile.name == '' and  user.profile.last_name == '' %}Не указаны{% endif %} </dd>
-            <dt>Электронная почта:</dt>
-            <dd>{{ user.email }}</dd>
-            <dt>Телефон:</dt>
-            <dd>{{ user.profile.phone|default:"Не указан" }}</dd>
-        </dl>
-        <a class="edit_lnk" href="/cabinet/edit_info_form/">Редактировать информацию</a>
-    </div><!--/personal_info-->
+    <div class="right col">
+        <div class="cabinet">
+            <h1>Личный кабинет <span class="ifregistred"><a class="dot" href="/password/change/">сменить пароль</a></span></h1>
 
-    <div class="history load_block">
-        <input type="hidden" id="loaded_ids" autocomplete="off" value="{{ next_id_loaded_items }}">
-        <input type="hidden" id="a_name" autocomplete="off" value="orders">
-        <input type="hidden" id="m_name" autocomplete="off" value="Order">
-
-        <h2>История ваших заказов:</h2>
-
-        {% for order in orders %}
-            <div class="history_order">
-                <div class="history_status delivered">
-                    {% if order.order_status == 'processed' %}
-                        Обрабатывается
-                    {% endif %}{% if order.order_status == 'posted' %}
-                        Отправлен
-                    {% endif %}{% if order.order_status == 'delivered' %}
-                        Доставлен
-                    {% endif %}{% if order.order_status == 'cancelled' %}
-                        Отменен
-                    {% endif %}
+            <div class="cabinet_info">
+                <div class="cabinet_info_name">Имя и фамилия:</div>
+                <div class="cabinet_info_val">
+                    {{ user.profile.name }} {{ user.profile.last_name }}
+                    {% if user.profile.name == '' and  user.profile.last_name == '' %}Не указаны{% endif %}
                 </div>
-                <h3 class="history_num">Заказ № {{ order.id }}</h3>
-                <div class="history_price">Стоимость заказа:  {{ order.get_str_total }} рублей</div>
-                <div class="history_items">
-                    {% for order_product in order.get_products %}
-                        <h3 class="item_name"><a href="{{ order_product.product.get_absolute_url }}">{{ order_product.product.title }}</a></h3>
-                        <div class="item_art">{% if order_product.product.art %}«{{ order_product.product.art }}»{% endif %}</div>
+            </div>
+            <div class="cabinet_info">
+                <div class="cabinet_info_name">Электронная почта:</div>
+                <div class="cabinet_info_val">{{ user.email }}</div>
+            </div>
+            <div class="cabinet_info">
+                <div class="cabinet_info_name">Телефон:</div>
+                <div class="cabinet_info_val">{{ user.profile.phone|default:"Не указан" }}</div>
+            </div>
+            <div class="cabinet_info_edit col"><a href="/cabinet/edit_info_form/"></a></div>
+
+            <div class="history load_block">
+                <h2>История ваших заказов:</h2>
+                <table>
+                    {% for order in orders %}
+                        <tr>
+                            <td class="history_num_col"><div class="history_num">{{ forloop.counter }}</div></td>
+                            <td class="history_items_col">
+                                {% for product in order.get_products %}
+                                    <div class="history_item">
+                                        <div>{{ product.product.category.title_singular|title }}</div>
+                                        <div><strong>{{ product.product.title }}</strong></div>
+                                    </div>
+                                {% endfor %}
+                            </td>
+                            <td class="history_status_col">
+                                {% if order.order_status == 'processed' %}
+                                    <div class="history_status history_status_ok">Обрабатывается</div>
+                                {% endif %}{% if order.order_status == 'posted' %}
+                                    <div class="history_status history_status_ok">Отправлен</div>
+                                {% endif %}{% if order.order_status == 'delivered' %}
+                                    <div class="history_status history_status_ok">Доставлен</div>
+                                {% endif %}{% if order.order_status == 'cancelled' %}
+                                    <div class="history_status history_status_cancel">Отменен</div>
+                                {% endif %}
+                                <div>{{ order.create_date|date:"j E" }}</div>
+                            </td>
+                            <td class="history_price_col">
+                                <em>Стоимость заказа</em> <span class="item_price">{{ order.total_price }} <i class="r">руб.</i></span>
+                            </td>
+                        </tr>
+                    {% empty %}
+                        Ни один товар пока не заказан.
                     {% endfor %}
-                </div>
-                <div class="h_t"><img src="/media/img/h_t.png" alt="" /></div>
-                <div class="h_r"><img src="/media/img/h_r.png" alt="" /></div>
-                <div class="h_b"><img src="/media/img/h_b.png" alt="" /></div>
-                <div class="h_l"><img src="/media/img/h_l.png" alt="" /></div>
+                </table>
             </div>
-        {% endfor %}
-
-        {% if loaded_count %}
-            <div class="more">
-                <a href="#" class="load_items">Ещё {{ loaded_count }} заказ{{ loaded_count|choose_plural:",а,ов" }}</a>
-            </div>
-        {% endif %}
-    </div><!--/history-->
+        </div><!--/cabinet-->
+    </div><!--/right-->
 
 {% endblock %}

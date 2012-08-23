@@ -31,27 +31,32 @@ class Cart(models.Model):
         sum = 0
         for cart_product in self.cartproduct_set.select_related().filter(is_deleted=False):
             sum += cart_product.get_total()
+            sum += cart_product.get_services_total()
         return sum
 
     def get_str_total(self):
         total = self.get_total()
-        value = u'%s' % total
-        try:
+        if total != 0:
+            value = u'%s' % total
             if total._isinteger():
-                value = u'%s' % value[:len(value) - 3]
+                value = u'%s' %value[:len(value)-3]
                 count = 3
             else:
                 count = 6
-        except AttributeError:
-            return value
 
-        if len(value) > count:
-            ends = value[len(value) - count:]
-            starts = value[:len(value) - count]
+            if len(value)>count:
+                ends = value[len(value)-count:]
+                starts = value[:len(value)-count]
 
-            return u'%s %s' % (starts, ends)
+                if len(starts)>3:
+                    starts = u'%s %s' % (starts[:1],starts[1:len(starts)])
+
+                return u'%s %s' %(starts, ends)
+            else:
+                return u'%s' % value
         else:
-            return value
+            return u'0'
+
 
 class CartProduct(models.Model):
     cart = models.ForeignKey(Cart, verbose_name=u'Корзина')
@@ -72,26 +77,40 @@ class CartProduct(models.Model):
         total = self.get_total()
         value = u'%s' % total
         if total._isinteger():
-            value = u'%s' % value[:len(value) - 3]
+            value = u'%s' %value[:len(value)-3]
             count = 3
         else:
             count = 6
 
-        if len(value) > count:
-            ends = value[len(value) - count:]
-            starts = value[:len(value) - count]
+        if len(value)>count:
+            ends = value[len(value)-count:]
+            starts = value[:len(value)-count]
 
-            return u'%s %s' % (starts, ends)
+            if len(starts)>3:
+                starts = u'%s %s' % (starts[:1],starts[1:len(starts)])
+
+            return u'%s %s' %(starts, ends)
         else:
-            return value
+            return u'%s' % value
 
     def get_prod_services(self):
+        prod_services = self.get_services()
+        all_services = self.product.category.get_services()
+        for service in all_services:
+            for ps in prod_services:
+                if service.id == ps.service.id:
+                    setattr(service, 'count', ps.count)
+                    setattr(service, 'str_price', ps.get_str_total())
+                    setattr(service, 'num_price', ps.get_total())
+        return all_services
+
+    def get_services(self):
         return self.cartproductservice_set.all()
 
     def get_services_total(self):
         summ = 0
-        for service in self.cartproductservice_set:
-            summ = summ + service.get_total
+        for service in self.cartproductservice_set.all():
+            summ += service.get_total()
         return summ
 
     def get_service_str_total(self):
@@ -143,18 +162,21 @@ class CartProductService(models.Model):
         total = self.get_total()
         value = u'%s' % total
         if total._isinteger():
-            value = u'%s' % value[:len(value) - 3]
+            value = u'%s' %value[:len(value)-3]
             count = 3
         else:
             count = 6
 
-        if len(value) > count:
-            ends = value[len(value) - count:]
-            starts = value[:len(value) - count]
+        if len(value)>count:
+            ends = value[len(value)-count:]
+            starts = value[:len(value)-count]
 
-            return u'%s %s' % (starts, ends)
+            if len(starts)>3:
+                starts = u'%s %s' % (starts[:1],starts[1:len(starts)])
+
+            return u'%s %s' %(starts, ends)
         else:
-            return value
+            return u'%s' % value
 
     def __unicode__(self):
         return u'на %s руб.' % self.get_str_total()
@@ -164,8 +186,8 @@ class OneClickBye(models.Model):
     product = models.ForeignKey(Product, verbose_name=u'Товар', on_delete = models.SET_NULL, blank=True, null=True,)
     create_date = models.DateTimeField(verbose_name=u'Дата оформления', default=datetime.datetime.now)
 
-    product_description = models.CharField(max_length=255, verbose_name=u'описание товара') # todo: Производитель - название категории (ед.ч) - название товара
-    product_price = models.DecimalField(verbose_name=u'Цена товара', decimal_places=2, max_digits=10,) # todo: Сохранять цену товара
+    product_description = models.CharField(max_length=255, verbose_name=u'описание товара')
+    product_price = models.DecimalField(verbose_name=u'Цена товара', decimal_places=2, max_digits=10,)
 
     class Meta:
         verbose_name = _(u'oneclk_item')
@@ -200,7 +222,7 @@ class Order(models.Model):
     address = models.CharField(max_length=70, verbose_name=u'адрес', blank=True)
     note = models.CharField(max_length=255, verbose_name=u'примечание', blank=True)
 
-    total_price = models.CharField(max_length=100, verbose_name=u'общая стоимость')  # todo: Заносить суда общую стоимость по сохраняемому заказу
+    total_price = models.CharField(max_length=100, verbose_name=u'общая стоимость')
     create_date = models.DateTimeField(verbose_name=u'Дата оформления', default=datetime.datetime.now)
 
     class Meta:
@@ -234,24 +256,28 @@ class Order(models.Model):
         sum = 0
         for order_product in self.orderproduct_set.select_related().all():
             sum += order_product.get_total()
+            sum += order_product.get_services_total()
         return sum
 
     def get_str_total(self):
         total = self.get_total()
         value = u'%s' % total
         if total._isinteger():
-            value = u'%s' % value[:len(value) - 3]
+            value = u'%s' %value[:len(value)-3]
             count = 3
         else:
             count = 6
 
-        if len(value) > count:
-            ends = value[len(value) - count:]
-            starts = value[:len(value) - count]
+        if len(value)>count:
+            ends = value[len(value)-count:]
+            starts = value[:len(value)-count]
 
-            return u'%s %s' % (starts, ends)
+            if len(starts)>3:
+                starts = u'%s %s' % (starts[:1],starts[1:len(starts)])
+
+            return u'%s %s' %(starts, ends)
         else:
-            return value
+            return u'%s' % value
 
     def admin_summary(self):
         return '<span>%s</span>' % self.get_str_total()
@@ -270,8 +296,8 @@ class OrderProduct(models.Model):
     count = models.PositiveIntegerField(default=1, verbose_name=u'Количество')
     product = models.ForeignKey(Product, verbose_name=u'Товар', on_delete = models.SET_NULL, blank=True, null=True,)
 
-    product_description = models.CharField(max_length=255, verbose_name=u'описание товара') # todo: Производитель - название категории (ед.ч) - название товара
-    product_price = models.DecimalField(verbose_name=u'Цена товара', decimal_places=2, max_digits=10,) # todo: Сохранять цену товара
+    product_description = models.CharField(max_length=255, verbose_name=u'описание товара')
+    product_price = models.DecimalField(verbose_name=u'Цена товара', decimal_places=2, max_digits=10,)
 
     def __unicode__(self):
         return u'на сумму %s руб.' % self.get_str_total()
@@ -286,6 +312,35 @@ class OrderProduct(models.Model):
 
     def get_str_total(self):
         total = self.get_total()
+        value = u'%s' % total
+        if total._isinteger():
+            value = u'%s' %value[:len(value)-3]
+            count = 3
+        else:
+            count = 6
+
+        if len(value)>count:
+            ends = value[len(value)-count:]
+            starts = value[:len(value)-count]
+
+            if len(starts)>3:
+                starts = u'%s %s' % (starts[:1],starts[1:len(starts)])
+
+            return u'%s %s' %(starts, ends)
+        else:
+            return u'%s' % value
+
+    def get_services(self):
+        return self.orderproductservice_set.all()
+
+    def get_services_total(self):
+        summ = 0
+        for service in self.orderproductservice_set.all():
+            summ += service.get_total()
+        return summ
+
+    def get_service_str_total(self):
+        total = self.get_services_total()
         value = u'%s' % total
         if total._isinteger():
             value = u'%s' % value[:len(value) - 3]
@@ -306,8 +361,8 @@ class OrderProductService(models.Model):
     count = models.PositiveIntegerField(default=1, verbose_name=u'Количество')
     service = models.ForeignKey(CategoryService, verbose_name=u'услуга', on_delete = models.SET_NULL, blank=True, null=True,)
 
-    service_description = models.CharField(max_length=255, verbose_name=u'описание услуги') # todo: описание товара
-    service_price = models.DecimalField(verbose_name=u'Цена услуги', decimal_places=2, max_digits=10,) # todo: Сохранять цену услги
+    service_description = models.CharField(max_length=255, verbose_name=u'описание услуги')
+    service_price = models.DecimalField(verbose_name=u'Цена услуги', decimal_places=2, max_digits=10,)
 
     def __unicode__(self):
         return u'на сумму %s руб.' % self.get_str_total()
@@ -324,16 +379,19 @@ class OrderProductService(models.Model):
         total = self.get_total()
         value = u'%s' % total
         if total._isinteger():
-            value = u'%s' % value[:len(value) - 3]
+            value = u'%s' %value[:len(value)-3]
             count = 3
         else:
             count = 6
 
-        if len(value) > count:
-            ends = value[len(value) - count:]
-            starts = value[:len(value) - count]
+        if len(value)>count:
+            ends = value[len(value)-count:]
+            starts = value[:len(value)-count]
 
-            return u'%s %s' % (starts, ends)
+            if len(starts)>3:
+                starts = u'%s %s' % (starts[:1],starts[1:len(starts)])
+
+            return u'%s %s' %(starts, ends)
         else:
-            return value
+            return u'%s' % value
 

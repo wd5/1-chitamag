@@ -80,6 +80,9 @@ class Category(MPTTModel):
         else:
             return reverse('show_category',kwargs={'slug': '%s'%self.slug})
 
+    def get_services(self):
+        return self.categoryservice_set.all()
+
     def get_products(self):
         products_ids = []
         if self.parent == None:
@@ -140,6 +143,9 @@ class CategoryService(models.Model):
 
     def short_description(self):
         return '<span>%s</span>' % smart_truncate(self.description, 50)
+
+    def get_str_price(self):
+        return str_price(self.price)
 
     short_description.allow_tags = True
     short_description.short_description = 'Краткое описание'

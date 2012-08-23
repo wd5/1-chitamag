@@ -13,7 +13,7 @@ class CartAdmin(admin.ModelAdmin):
     list_display = ('id','create_date','sessionid',)
     list_display_links = ('id','create_date','sessionid',)
     list_filter = ('create_date',)
-    inlines = [CartProductInlines]
+    inlines = [CartProductInlines,]
 
 class CartProductServiceAdmin(admin.ModelAdmin):
     list_display = ('id','service','count','cart_product',)

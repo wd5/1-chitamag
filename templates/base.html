@@ -57,7 +57,7 @@
 
 		<div class="header_auth">
             {% if user.is_authenticated %}
-{#                <a href="/cabinet/">Личный кабинет</a>#}
+                <a class="auth_lnk dot" href="/cabinet/">Кабинет</a>
                 <a href="/logout/" class="logout" title="Выйти">выйти</a>
             {% else %}
                 <a class="auth_lnk dot fancybox" href="#auth_form">Вход</a>

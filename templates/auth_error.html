@@ -1,12 +1,15 @@
 {% extends "base.html" %}
 
-{% load thumbnail siteblocks_extras %}
+{% load thumbnail products_extras siteblocks_extras %}
 
 {% block title %}
     Ошибка при авторизации &mdash;
 {% endblock %}
 
 {% block main %}
+    {% block_catalog_menu '' %}
+
+    <div class="right col">
     <div class="page_h">
         <h1>Ошибка при авторизации</h1>
     </div>
@@ -28,6 +31,7 @@
                 <div><input class="btn2 auth_submit" type="submit" value="Войти" /></div>
             </form>
         {% endif %}
+    </div>
     </div>
 
 {% endblock %}

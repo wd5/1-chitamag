@@ -136,7 +136,6 @@ def upload_xml(request):
                 # распарсиваем:
                 f = parse(path_name)
 
-                # todo: и еще надо будет учитывать, что при повторном импорте нужно сначала смотреть. есть ли уже такая категория или нет - чтобы дублей не наделать
                 rows_array = f.getElementsByTagName('ROW')
                 actions_array = f.getElementsByTagName('action')
                 all_categories = Category.objects.all()

@@ -3,12 +3,10 @@
 <p>Заказчик: {{ order.first_name }} {{ order.last_name }}</p>
 <p>E-mail: {{ order.email }}</p>
 <p>Телефон: {{ order.phone }}</p>
-<p>Тип доставки: {% if order.order_carting == 'country' %}Доставка по стране{% endif %}{% if order.order_carting == 'moscow' %}Доставка по Москве{% endif %}{% if order.order_carting == 'selfcarting' %}Самовывоз{% endif %}</p>
-{% if order.order_carting.value == 'country' %}
+<p>Тип доставки: {% if order.order_carting == 'carting' %}Доставка{% endif %}{% if order.order_carting == 'selfcarting' %}Самовывоз{% endif %}</p>
+{% if order.order_carting.value == 'carting' %}
 <hr>
-    <p>Город: {{ order.city }}</p>
     <p>Адрес: {{ order.address }}</p>
-    <p>Индекс: {{ order.index }}</p>
     <p>Примечание: {{ order.note }}</p>
 {% endif %}
 <hr>
@@ -17,7 +15,16 @@
 <h3>Товары:</h3>
 <ul>
 {% for product in products %}
-    <li>{{ product.product.title }} (размер {{ product.size.value }}), в количестве {{ product.count }} шт, на сумму {{ product.get_str_total }} руб.</li>
+    <li>{{ product.product.title }}, в количестве {{ product.count }} шт, на сумму {{ product.get_str_total }} руб.
+        {% if product.get_services %}
+            Включены следующие услуги:
+            <ul>
+                {% for service in product.get_services %}
+                    <li>{{ service.service.description }}, в количестве {{ service.count }} шт, на сумму {{ service.get_str_total }} руб.
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </li>
 {% endfor %}
 </ul>
 </p>

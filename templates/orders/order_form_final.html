@@ -6,15 +6,20 @@
     Оформление заказа &mdash;
 {% endblock %}
 
-{% block center_col %}
+{% block main %}
+    <div class="page_h">
+        <h1>Заказ оформлен</h1>
+    </div>
+
     <div class="order_final">
-        <div class="text text_page">
-            <h1>Ваш заказ успешно оформлен под номером {{ order.id }}</h1>
+        <div class="text">
+            <h2>Ваш заказ успешно оформлен под номером {{ order.id }}</h2>
             <p>Вся информация о заказе выслана на контактный e-mail. Наш менеджер скоро с Вами свяжется чтобы уточнить время доставки.</p>
             {% if reg_form %}
                 <p>Вы занесли уже большую часть информации, чтобы участвовать в наших акциях и специальных предложения. Мы советуем Вам зарегистрироваться на нашем сайте.</p>
             {% endif %}
         </div><!--/text-->
+
         {% if reg_form %}
             <form class="final_reg" method="post" action="/registration_form/">
                 <div style="display: none;">

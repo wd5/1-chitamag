@@ -6,9 +6,9 @@ from django.shortcuts import render_to_response
 from django.template.loader import render_to_string
 from django.views.decorators.csrf import csrf_exempt, csrf_protect
 from django.views.generic import FormView, DetailView, TemplateView, View
-from apps.orders.models import Cart, CartProduct, Order, OrderProduct
+from apps.orders.models import Cart, CartProduct, Order, OrderProduct, CartProductService, OrderProductService
 from apps.orders.forms import RegistrationOrderForm, OneClickByeForm
-from apps.products.models import Product
+from apps.products.models import Product, CategoryService
 from apps.users.models import Profile
 from apps.users.forms import RegistrationForm
 from apps.pages.models import Page
@@ -74,13 +74,14 @@ class OrderFromView(FormView):
 
     def post(self, request, *args, **kwargs):
         try:
-            page_moscow = Page.objects.get(id=12)
-        except:
-            page_moscow = False
+            phone = Settings.objects.get(name='contacts_phone').value
+        except Settings.DoesNotExist:
+            phone = False
+
         try:
-            page_selfcarting = Page.objects.get(id=13)
+            selfcarting_text = Settings.objects.get(name='selfcarting')
         except:
-            page_selfcarting = False
+            selfcarting_text = False
 
         response = HttpResponse()
         badresponse = HttpResponseBadRequest()
@@ -129,16 +130,27 @@ class OrderFromView(FormView):
             new_order = order_form.save()
 
             for cart_product in cart_products:
-                OrderProduct.objects.create(
+                ord_prod = OrderProduct(
                     order=new_order,
                     count=cart_product.count,
                     product=cart_product.product,
+                    product_description = u'%s - %s - %s' % (cart_product.product.manufacturer.title, cart_product.product.category.title_singular, cart_product.product.title),
+                    product_price = cart_product.product.price
                 )
+                ord_prod.save()
+                for service in cart_product.get_services():
+                    ord_prod_srv = OrderProductService(
+                        order_product = ord_prod,
+                        count = service.count,
+                        service = service.service,
+                        service_description = service.service.description,
+                        service_price = service.service.price
+                    )
+                    ord_prod_srv.save()
 
             if profile:
-                profile.city = new_order.city
                 profile.address = new_order.address
-                profile.index = new_order.index
+                profile.phone = new_order.phone
                 profile.note = new_order.note
                 profile.save()
 
@@ -171,16 +183,50 @@ class OrderFromView(FormView):
                 reg_form = False
             return render_to_response('orders/order_form_final.html',
                     {'order': new_order, 'request': request, 'user': request.user,
-                     'reg_form': reg_form, })
+                     'reg_form': reg_form, 'contacts_phone': phone, })
         else:
             return render_to_response(self.template_name,
                     {'order_form': order_form, 'request': request, 'user': request.user,
-                     'page_selfcarting': page_selfcarting, 'page_moscow': page_moscow, })
+                     'selfcarting_text': selfcarting_text, 'cart_total':cart.get_str_total(), 'contacts_phone': phone, })
 
     def get(self, request, *args, **kwargs):
         form_class = self.get_form_class()
         form = self.get_form(form_class)
         context = self.get_context_data(**kwargs)
+
+        cookies = self.request.COOKIES
+        cookies_cart_id = False
+        if 'chitamag_cart_id' in cookies:
+            cookies_cart_id = cookies['chitamag_cart_id']
+
+        if self.request.user.is_authenticated and self.request.user.id:
+            profile_id = self.request.user.profile.id
+        else:
+            profile_id = False
+
+        if profile_id:
+            try:
+                profile = Profile.objects.get(pk=int(profile_id))
+            except:
+                profile = False
+        else:
+            profile = False
+
+        sessionid = self.request.session.session_key
+
+        try:
+            if profile_id:
+                cart = Cart.objects.get(profile=profile_id)
+            elif cookies_cart_id:
+                cart = Cart.objects.get(id=cookies_cart_id)
+            else:
+                cart = Cart.objects.get(sessionid=sessionid)
+        except Cart.DoesNotExist:
+            cart = False
+
+        cart_total = cart.get_str_total()
+        context['cart_total'] = cart_total
+
         context['order_form'] = form
 
         if self.request.user.is_authenticated and self.request.user.id:
@@ -193,31 +239,27 @@ class OrderFromView(FormView):
                 context['order_form'].fields['last_name'].initial = profile.last_name
                 context['order_form'].fields['email'].initial = profile.user.email
                 context['order_form'].fields['phone'].initial = profile.phone
-                context['order_form'].fields['order_carting'].initial = u'country'
+                context['order_form'].fields['order_carting'].initial = u'carting'
                 context['order_form'].fields['order_status'].initial = u'processed'
-                context['order_form'].fields['city'].initial = profile.city
                 context['order_form'].fields['address'].initial = profile.address
-                context['order_form'].fields['index'].initial = profile.index
                 context['order_form'].fields['note'].initial = profile.note
+                context['order_form'].fields['total_price'].initial = cart_total
             except Profile.DoesNotExist:
                 return HttpResponseBadRequest()
         else:
             context['order_form'].fields['profile'].queryset = Profile.objects.extra(where=['1=0'])
-            context['order_form'].fields['order_carting'].initial = u'country'
+            context['order_form'].fields['order_carting'].initial = u'carting'
             context['order_form'].fields['order_status'].initial = u'processed'
+            context['order_form'].fields['total_price'].initial = cart_total
 
         return self.render_to_response(context)
 
     def get_context_data(self, **kwargs):
         context = super(OrderFromView, self).get_context_data()
         try:
-            context['page_moscow'] = Page.objects.get(id=12)
+            context['selfcarting_text'] = Settings.objects.get(name='selfcarting')
         except:
-            context['page_moscow'] = False
-        try:
-            context['page_selfcarting'] = Page.objects.get(id=13)
-        except:
-            context['page_selfcarting'] = False
+            context['selfcarting_text'] = False
 
         return context
 
@@ -238,7 +280,6 @@ class AddProdictToCartView(View):
                     product_id = int(product_id)
                 except ValueError:
                     return HttpResponseBadRequest()
-
 
             try:
                 product = Product.objects.get(id=product_id)
@@ -369,7 +410,9 @@ class DeleteProductFromCart(View):
             cart_total = u''
             if cart_products_count:
                 cart_total = cart_product.cart.get_str_total()
-            data = u'''{"cart_total":'%s'}''' % cart_total
+            else:
+                cart_total = u'0'
+            data = u'''{"cart_total":'%s',"cart_product_id":'%s'}''' % (cart_total, cart_product_id)
             response.content = data
             return response
 
@@ -444,6 +487,98 @@ class ChangeCartCountView(View):
 
 change_cart_product_count = csrf_exempt(ChangeCartCountView.as_view())
 
+class ChangeCartProdServView(View):
+    def post(self, request, *args, **kwargs):
+        if not request.is_ajax():
+            return HttpResponseRedirect('/')
+        else:
+            if 'cart_product_id' not in request.POST or 'serv_id' not in request.POST or 'not_delete' not in request.POST:
+                return HttpResponseBadRequest()
+
+            cart_product_id = request.POST['cart_product_id']
+            try:
+                cart_product_id = int(cart_product_id)
+                cart_product = CartProduct.objects.get(id=cart_product_id)
+            except:
+                return HttpResponseBadRequest()
+
+            serv_id = request.POST['serv_id']
+            try:
+                serv_id = int(serv_id)
+                service = CategoryService.objects.get(id=serv_id)
+            except:
+                return HttpResponseBadRequest()
+
+            try:
+                serv_count = request.POST['serv_count']
+                serv_count = int(serv_count)
+            except:
+                serv_count = 1
+
+            not_delete = request.POST['not_delete']
+
+            if not_delete == 'false':
+                try:
+                    prod_service = CartProductService.objects.get(cart_product=cart_product, service=service)
+                    prod_service.delete()
+                    serv_str_total = u'0'
+                except:
+                    serv_str_total = u'0'
+            else:
+                prod_service = CartProductService(cart_product=cart_product, count=serv_count, service=service)
+                prod_service.save()
+                serv_str_total = prod_service.get_str_total()
+
+            cart_str_total = cart_product.cart.get_str_total()
+
+            data = u'''{"cart_str_total":'%s',"serv_str_total":'%s'}''' % (cart_str_total, serv_str_total)
+
+            return HttpResponse(data)
+
+change_cart_product_service = csrf_exempt(ChangeCartProdServView.as_view())
+
+class ChangeCartProdServCountView(View):
+    def post(self, request, *args, **kwargs):
+        if not request.is_ajax():
+            return HttpResponseRedirect('/')
+        else:
+            if 'cart_product_id' not in request.POST or 'serv_id' not in request.POST:
+                return HttpResponseBadRequest()
+
+            cart_product_id = request.POST['cart_product_id']
+            try:
+                cart_product_id = int(cart_product_id)
+                cart_product = CartProduct.objects.get(id=cart_product_id)
+            except:
+                return HttpResponseBadRequest()
+
+            serv_id = request.POST['serv_id']
+            try:
+                serv_id = int(serv_id)
+                service = CategoryService.objects.get(id=serv_id)
+            except:
+                return HttpResponseBadRequest()
+
+            try:
+                serv_count = request.POST['serv_count']
+                serv_count = int(serv_count)
+            except:
+                serv_count = 1
+
+
+            prod_service = CartProductService.objects.get(cart_product=cart_product, service=service)
+            prod_service.count = serv_count
+            prod_service.save()
+            serv_str_total = prod_service.get_str_total()
+
+            cart_str_total = cart_product.cart.get_str_total()
+
+            data = u'''{"cart_str_total":'%s',"serv_str_total":'%s'}''' % (cart_str_total, serv_str_total)
+
+            return HttpResponse(data)
+
+change_cart_product_service_count = csrf_exempt(ChangeCartProdServCountView.as_view())
+
 class CheckOneClkFormView(View):
     def post(self, request, *args, **kwargs):
         if request.is_ajax():
@@ -457,7 +592,7 @@ class CheckOneClkFormView(View):
                     'products/admin_message_template_one_click.html',
                         {
                         'saved_object': saved_object,
-                    }
+                        }
                 )
                 try:
                     emailto = Settings.objects.get(name='workemail').value

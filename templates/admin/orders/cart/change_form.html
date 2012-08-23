@@ -51,16 +51,12 @@
 {% endfor %}
 {% endblock %}
 
-    <p><input type="text" value="1@1.ru" name="ADMIN_EMAIL">
-    <input type="submit" value="Тестовое сообщение" name="_test">
-    <input type="submit" value="Разослать" name="_send"></p>
-
 {% block after_field_sets %}{% endblock %}
 
 {% block inline_field_sets %}
-{% for inline_admin_formset in inline_admin_formsets %}
-    {% include inline_admin_formset.opts.template %}
-{% endfor %}
+    {% for inline_admin_formset in inline_admin_formsets %}
+        {% include 'admin/orders/cart/tabular.html' %}
+    {% endfor %}
 {% endblock %}
 
 {% block after_related_objects %}{% endblock %}

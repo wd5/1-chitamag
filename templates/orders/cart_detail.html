@@ -6,21 +6,23 @@
     Корзина &mdash;
 {% endblock %}
 
-{% block center_col %}
+{% block main %}
+    <div class="cart">
     {% if is_empty %}
-            <h1>Ваша корзина пока пуста</h1>
+        <h1>Ваша корзина пока пуста</h1>
     {% else %}
-        <div class="cart">
-            {% for cart_item in cart_products %}
-                {% include 'orders/cart_item.html' %}
-            {% endfor %}
+        <h2>Ваш заказ</h2>
 
-            <div class="cart_total">
-                <strong>Общая стоимость</strong>
-                <div class="item_price">{{ cart_str_total }} <span>руб.</span></div>
-                <input type="hidden" class="id_cart" value="{{ cart_id }}">
-                <div><a href="/show_order_form/"><input class="btn2 cart_submit" type="button" value="Оформить заказ" /></a></div>
-            </div>
-        </div><!--/cart-->
+        {% for cart_item in cart_products %}
+            {% include 'orders/cart_item.html' %}
+        {% endfor %}
+
+        <div class="cart_total">
+            <span class="total_sum">Общая стоимость</span>
+            <span class="cart_price_val">{{ cart_str_total }}</span> <i class="r">руб.</i>
+            <input type="hidden" class="id_cart" value="{{ cart_id }}">
+            <div class="cart_submit"><a href="/show_order_form/"><input class="btn2 cart_submit_btn" type="submit" value="Оформить заказ" /></a></div>
+        </div>
     {% endif %}
+    </div><!--/cart-->
 {% endblock %}
