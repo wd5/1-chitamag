@@ -21,7 +21,7 @@
             <span class="total_sum">Общая стоимость</span>
             <span class="cart_price_val">{{ cart_str_total }}</span> <i class="r">руб.</i>
             <input type="hidden" class="id_cart" value="{{ cart_id }}">
-            <div class="cart_submit"><a href="/show_order_form/"><input class="btn2 cart_submit_btn" type="submit" value="Оформить заказ" /></a></div>
+            <div class="cart_submit"><a href="/show_order_form/"><input {% if cart_str_total == '0' %}disabled="true"{% endif %}  class="btn2 cart_submit_btn" type="submit" value="Оформить заказ" /></a></div>
         </div>
     {% endif %}
     </div><!--/cart-->

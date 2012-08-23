@@ -391,6 +391,10 @@ $(function(){
             success:function(data){
                 data = eval('(' + data + ')');
                 $('.cart_total .cart_price_val').html(data.cart_str_total);
+                if (data.cart_str_total=='0')
+                    {$('.cart_submit_btn').attr('disabled', true);}
+                else
+                    {$('.cart_submit_btn').attr('disabled', false);}
                 parent.find('.cart_price_val').html(data.serv_str_total);
             },
             error:function(data){
@@ -423,6 +427,10 @@ $(function(){
                     success:function(data){
                         data = eval('(' + data + ')');
                         $('.cart_total .cart_price_val').html(data.cart_str_total);
+                        if (data.cart_str_total=='0')
+                            {$('.cart_submit_btn').attr('disabled', true);}
+                        else
+                            {$('.cart_submit_btn').attr('disabled', false);}
                         parent.find('.cart_price_val').html(data.serv_str_total);
                     },
                     error:function(data){
@@ -509,7 +517,10 @@ $(function(){
                         parent.find('.cart_qty_modal_text').val(new_count);
                         parent.find('.cart_qty_total_price span').text(data.tr_str_total);
                         $('.cart_total .cart_price_val').html(data.cart_str_total);
-
+                        if (data.cart_str_total=='0')
+                            {$('.cart_submit_btn').attr('disabled', true);}
+                        else
+                            {$('.cart_submit_btn').attr('disabled', false);}
                         $('.cart_submit').attr('disabled', false);
                         $('.cart_qty_btn').attr('disabled', false);
                         $('.cart_item_restore_btn').attr('disabled', false);
@@ -610,6 +621,10 @@ $(function(){
                 success:function(data){
                     data = eval('(' + data + ')');
                     $('.cart_total .cart_price_val').html(data.cart_total);
+                    if (data.cart_total=='0')
+                        {$('.cart_submit_btn').attr('disabled', true);}
+                    else
+                        {$('.cart_submit_btn').attr('disabled', false);}
                     parent.append('<div class="cart_item_deleted"><a class="cart_back" name="'+data.cart_product_id+'" href="#">Вернуть</a></div>')
                 },
                 error:function(data){
@@ -633,6 +648,10 @@ $(function(){
                 success:function(data){
                     data = eval('(' + data + ')');
                     $('.cart_total .cart_price_val').html(data.cart_total);
+                    if (data.cart_total=='0')
+                        {$('.cart_submit_btn').attr('disabled', true);}
+                    else
+                        {$('.cart_submit_btn').attr('disabled', false);}
                     parent.find('.cart_item_deleted').remove()
                 },
                 error:function(data){
