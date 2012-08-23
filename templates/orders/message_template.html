@@ -17,7 +17,7 @@
 {% for product in products %}
     <li>{{ product.product.title }}, в количестве {{ product.count }} шт, на сумму {{ product.get_str_total }} руб.
         {% if product.get_services %}
-            Включены следующие услуги:
+            <br/>Включены следующие услуги:
             <ul>
                 {% for service in product.get_services %}
                     <li>{{ service.service.description }}, в количестве {{ service.count }} шт, на сумму {{ service.get_str_total }} руб.
