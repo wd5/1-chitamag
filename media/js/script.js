@@ -177,24 +177,24 @@ $(function(){
 
         var el = $(this);
         var parent = $(this).parents('.load_block');
+        var tr_count = parent.find('table tr').length;
         $.ajax({
             url: "/load_items/",
             data: {
                 load_ids: parent.find('#loaded_ids').val(),
                 m_name: parent.find('#m_name').val(),
-                a_name: parent.find('#a_name').val()
+                a_name: parent.find('#a_name').val(),
+                tr_count: tr_count
             },
             type: "POST",
             success: function(data) {
-
-                parent.append(data)
+                parent.find('tbody').append(data)
                 parent.find('.loaded:eq(0)').fadeIn("fast", function (){ //появление по очереди
                         $(this).next().fadeIn("fast", arguments.callee);
                     });
                 //parent.find('.loaded').fadeIn('slow')  //простое появление
                 parent.find('#loaded_ids').val(parent.find('#new_load_ids').val())
-                parent.find('div').removeClass('loaded')
-                parent.find('.more').appendTo(parent)
+                parent.find('tr').removeClass('loaded')
                 var rctxt = parent.find('#remaining_count_text').val()
                 var rc = parent.find('#remaining_count').val()
                 if (rctxt!=undefined)

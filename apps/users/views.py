@@ -144,6 +144,7 @@ def GetLoadIds(queryset, loaded_count):
     result = u'%s!%s' % (loaded_count, next_id_loaded_items)
     return result
 
+
 class ShowCabinetView(TemplateView):
     template_name = 'users/show_cabinet.html'
 
@@ -188,11 +189,15 @@ class ItemsLoaderView(View):
         if not request.is_ajax():
             return HttpResponseRedirect('/')
         else:
-            if 'load_ids' not in request.POST or 'm_name' not in request.POST or 'a_name' not in request.POST:
+            if 'load_ids' not in request.POST or 'm_name' not in request.POST or 'a_name' not in request.POST or 'tr_count' not in request.POST:
                 return HttpResponseBadRequest()
 
             load_ids = request.POST['load_ids']
             app_name = request.POST['a_name']
+            try:
+                tr_count = int(request.POST['tr_count'])
+            except:
+                tr_count = 1
             model_name = request.POST['m_name']
             model = get_model(app_name, model_name)
 
@@ -225,7 +230,7 @@ class ItemsLoaderView(View):
             items_html = render_to_string(
                 'items_loader/base_loader.html',
                     {'items': queryset, 'load_template': load_template, 'remaining_count': remaining_count,
-                     'load_ids': load_ids, }
+                     'load_ids': load_ids, 'tr_count': tr_count}
             )
             response.content = items_html
             return response

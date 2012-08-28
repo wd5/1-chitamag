@@ -307,7 +307,10 @@ class OrderProduct(models.Model):
         verbose_name_plural = _(u'product_items')
 
     def get_total(self):
-        total = self.product.price * self.count
+        if self.product:
+            total = self.product.price * self.count
+        else:
+            total = self.product_price * self.count
         return total
 
     def get_str_total(self):
@@ -372,7 +375,10 @@ class OrderProductService(models.Model):
         verbose_name_plural = _(u'service_items')
 
     def get_total(self):
-        total = self.service.price * self.count
+        if self.service:
+            total = self.service.price * self.count
+        else:
+            total = self.service_price * self.count
         return total
 
     def get_str_total(self):

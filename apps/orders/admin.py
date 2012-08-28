@@ -68,8 +68,8 @@ class OneClickByeAdmin(admin.ModelAdmin):
     form = OneClickByeAdminForm
     #readonly_fields = ('product',)
 
-admin.site.register(Cart, CartAdmin)
+#admin.site.register(Cart, CartAdmin)
 admin.site.register(Order, OrderAdmin)
-admin.site.register(CartProductService, CartProductServiceAdmin)
-admin.site.register(OrderProductService, OrderProductServiceAdmin)
+#admin.site.register(CartProductService, CartProductServiceAdmin)
+#admin.site.register(OrderProductService, OrderProductServiceAdmin)
 admin.site.register(OneClickBye, OneClickByeAdmin)

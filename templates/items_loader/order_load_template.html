@@ -1,35 +1,34 @@
 {% load pytils_numeral thumbnail %}
 
 {% for item in items %}
-
-    <div class="history_order loaded" style="display: none;">
-        <div class="history_status delivered">
-            {% if item.order_status == 'processed' %}
-                Обрабатывается
-            {% endif %}{% if item.order_status == 'posted' %}
-                Отправлен
-            {% endif %}{% if item.order_status == 'delivered' %}
-                Доставлен
-            {% endif %}{% if item.order_status == 'cancelled' %}
-                Отменен
-            {% endif %}
-        </div>
-        <h3 class="history_num">Заказ № {{ item.id }}</h3>
-        <div class="history_price">Стоимость заказа:  {{ item.get_str_total }} рублей</div>
-        <div class="history_items">
-            {% for order_product in item.get_products %}
-                <h3 class="item_name"><a href="{{ order_product.product.get_absolute_url }}">{{ order_product.product.title }}</a></h3>
-                <div class="item_art">{% if order_product.product.art %}«{{ order_product.product.art }}»{% endif %}</div>
+    <tr class="loaded" style="display: none;">
+        <td class="history_num_col"><div class="history_num">{{ tr_count|add:forloop.counter }}</div></td>
+        <td class="history_items_col">
+            {% for product in item.get_products %}
+                <div class="history_item">
+                    <div>{{ product.product.category.title_singular|title }}</div>
+                    <div><strong>{{ product.product.title }}</strong></div>
+                </div>
             {% endfor %}
-        </div>
-        <div class="h_t"><img src="/media/img/h_t.png" alt="" /></div>
-        <div class="h_r"><img src="/media/img/h_r.png" alt="" /></div>
-        <div class="h_b"><img src="/media/img/h_b.png" alt="" /></div>
-        <div class="h_l"><img src="/media/img/h_l.png" alt="" /></div>
-    </div>
-
+        </td>
+        <td class="history_status_col">
+            {% if item.order_status == 'processed' %}
+                <div class="history_status history_status_ok">Обрабатывается</div>
+            {% endif %}{% if item.order_status == 'posted' %}
+                <div class="history_status history_status_ok">Отправлен</div>
+            {% endif %}{% if item.order_status == 'delivered' %}
+                <div class="history_status history_status_ok">Доставлен</div>
+            {% endif %}{% if item.order_status == 'cancelled' %}
+                <div class="history_status history_status_cancel">Отменен</div>
+            {% endif %}
+            <div>{{ item.create_date|date:"j E" }}</div>
+        </td>
+        <td class="history_price_col">
+            <em>Стоимость заказа</em> <span class="item_price">{{ item.total_price }} <i class="r">руб.</i></span>
+        </td>
+    </tr>
 {% endfor %}
 
 {% if remaining_count %}
-        <input type="hidden" id="remaining_count_text" value="Ещё {{ remaining_count }} заказ{{ remaining_count|choose_plural:",а,ов" }}">
+    <input type="hidden" id="remaining_count_text" value="Ещё {{ remaining_count }} заказ{{ remaining_count|choose_plural:",а,ов" }}">
 {% endif %}

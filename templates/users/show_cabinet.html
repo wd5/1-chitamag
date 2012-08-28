@@ -33,7 +33,12 @@
             <div class="cabinet_info_edit col"><a href="/cabinet/edit_info_form/"></a></div>
 
             <div class="history load_block">
-                <h2>История ваших заказов:</h2>
+                {% if orders %}
+                    <h2>История ваших заказов:</h2>
+                {% endif %}
+                <input type="hidden" id="loaded_ids" autocomplete="off" value="{{ next_id_loaded_items }}">
+                <input type="hidden" id="a_name" autocomplete="off" value="orders">
+                <input type="hidden" id="m_name" autocomplete="off" value="Order">
                 <table>
                     {% for order in orders %}
                         <tr>
@@ -62,10 +67,14 @@
                                 <em>Стоимость заказа</em> <span class="item_price">{{ order.total_price }} <i class="r">руб.</i></span>
                             </td>
                         </tr>
-                    {% empty %}
-                        Ни один товар пока не заказан.
                     {% endfor %}
+
                 </table>
+                {% if loaded_count %}
+                    <div class="more">
+                        <a href="#" class="load_items">Ещё {{ loaded_count }} заказ{{ loaded_count|choose_plural:",а,ов" }}</a>
+                    </div>
+                {% endif %}
             </div>
         </div><!--/cabinet-->
     </div><!--/right-->
