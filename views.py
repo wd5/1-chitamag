@@ -157,9 +157,12 @@ def upload_xml(request):
                             except:
                                 exits_cat = False
 
-                            try:
-                                parent_cat = Category.objects.get(xml_id=int(cat_up_id))
-                            except:
+                            if cat_up_id:
+                                try:
+                                    parent_cat = Category.objects.get(xml_id=int(cat_up_id))
+                                except:
+                                    parent_cat = False
+                            else:
                                 parent_cat = False
 
                             new_category = False
@@ -171,7 +174,7 @@ def upload_xml(request):
                                 else:
                                     new_category = Category(title=cat_title, slug=cat_slug,
                                         is_published=False,
-                                        xml_id=cat_xml_id, xml_num=cat_xml_num, xml_up_id=cat_up_id)
+                                        xml_id=cat_xml_id, xml_num=cat_xml_num)
                                 new_category.save()
 
                             if new_category: # если категория создана - то проверяем и создаём группы параметров и параметры
