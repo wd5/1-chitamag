@@ -46,7 +46,7 @@ class CategoryAdmin(MPTTModelAdmin):
     list_editable = ('slug','order','is_published',)
     list_filter = ('parent','is_published')
     form = CategoryAdminForm
-    exclude = ('xml_id','xml_num','xml_up_id',)
+    exclude = ('xml_id','xml_up_id',)
     inlines = [FeatureGroupInline,]
     custom_filter_spec = {'parent': Category.objects.filter(parent=None)}
 
@@ -81,7 +81,7 @@ class ProductAdmin(AdminImageMixin, admin.ModelAdmin):
     list_filter = ('is_published','category','manufacturer',)
     search_fields = ('title', 'price',)
     filter_horizontal = ('related_products',)
-    exclude = ('xml_num',)
+    exclude = ('xml_code',)
     inlines = [ProductImageInline, ProductPropertyInline, FeatureValueInline, ]
     form = ProductAdminForm
     custom_filter_spec = {'category': Category.objects.exclude(parent=None)}

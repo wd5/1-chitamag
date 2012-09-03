@@ -53,7 +53,6 @@ class Category(MPTTModel):
     is_published = models.BooleanField(verbose_name = u'Опубликовано', default=True)
     # XML
     xml_id = models.IntegerField(verbose_name=u'id из файла xml', blank=True, null=True)
-    xml_num = models.IntegerField(verbose_name=u'num из файла xml', blank=True, null=True)
     xml_up_id= models.IntegerField(verbose_name=u'up_id из файла xml', blank=True, null=True)
 
     parent.custom_filter_spec = True
@@ -150,10 +149,10 @@ class CategoryService(models.Model):
     short_description.allow_tags = True
     short_description.short_description = 'Краткое описание'
 
-status_choices = (
-    (u'in_stock',u'есть в наличии'),
-    (u'on_request',u'под заказ'),
-    )
+#status_choices = (
+#    (u'in_stock',u'есть в наличии'),
+#    (u'on_request',u'под заказ'),
+#    )
 
 class Product(models.Model):
     category = models.ForeignKey(Category, verbose_name=u'Категория', blank=True, null=True)
@@ -164,7 +163,7 @@ class Product(models.Model):
     price = models.DecimalField(verbose_name=u'Цена', decimal_places=2, max_digits=10,)
     price_old = models.DecimalField(verbose_name=u'старая цена', decimal_places=2, max_digits=10, blank=True, null=True)
 
-    status = models.CharField(u'статус товара', choices=status_choices, max_length=20)
+    status = models.IntegerField(verbose_name=u'Срок поставки в днях', blank=True, null=True) # срок поставки в днях
 
     is_hit = models.BooleanField(verbose_name = u'Хит', default=False)
     is_new = models.BooleanField(verbose_name = u'Новинка', default=False)
@@ -177,7 +176,10 @@ class Product(models.Model):
     is_published = models.BooleanField(verbose_name = u'Опубликовано', default=True)
 
     # XML
-    xml_num = models.IntegerField(verbose_name=u'номер из файла xml', blank=True, null=True)
+    xml_code = models.IntegerField(verbose_name=u'code из файла xml', blank=True, null=True)
+
+    # Дата изменения
+    change_date = models.DateTimeField(verbose_name=u'Дата изменения', default=datetime.datetime.now, blank=True, null=True)
 
     category.custom_filter_spec = True
 
@@ -188,6 +190,7 @@ class Product(models.Model):
         ordering = ['-order',]
         verbose_name =_(u'product_item')
         verbose_name_plural =_(u'product_items')
+        get_latest_by = 'change_date'
 
     def __unicode__(self):
         return self.title
