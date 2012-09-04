@@ -130,21 +130,26 @@ class OrderFromView(FormView):
             new_order = order_form.save()
 
             for cart_product in cart_products:
+                try:
+                    mfrer = '%s - ' % cart_product.product.manufacturer.title
+                except:
+                    mfrer = ''
                 ord_prod = OrderProduct(
                     order=new_order,
                     count=cart_product.count,
                     product=cart_product.product,
-                    product_description = u'%s - %s - %s' % (cart_product.product.manufacturer.title, cart_product.product.category.title_singular, cart_product.product.title),
-                    product_price = cart_product.product.price
+                    product_description=u'%s%s - %s' % (mfrer, cart_product.product.category.title_singular,
+                        cart_product.product.title),
+                    product_price=cart_product.product.price
                 )
                 ord_prod.save()
                 for service in cart_product.get_services():
                     ord_prod_srv = OrderProductService(
-                        order_product = ord_prod,
-                        count = service.count,
-                        service = service.service,
-                        service_description = service.service.description,
-                        service_price = service.service.price
+                        order_product=ord_prod,
+                        count=service.count,
+                        service=service.service,
+                        service_description=service.service.description,
+                        service_price=service.service.price
                     )
                     ord_prod_srv.save()
 
@@ -187,7 +192,8 @@ class OrderFromView(FormView):
         else:
             return render_to_response(self.template_name,
                     {'order_form': order_form, 'request': request, 'user': request.user,
-                     'selfcarting_text': selfcarting_text, 'cart_total':cart.get_str_total(), 'contacts_phone': phone, })
+                     'selfcarting_text': selfcarting_text, 'cart_total': cart.get_str_total(), 'contacts_phone': phone
+                    , })
 
     def get(self, request, *args, **kwargs):
         form_class = self.get_form_class()
@@ -564,7 +570,6 @@ class ChangeCartProdServCountView(View):
                 serv_count = int(serv_count)
             except:
                 serv_count = 1
-
 
             prod_service = CartProductService.objects.get(cart_product=cart_product, service=service)
             prod_service.count = serv_count

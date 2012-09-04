@@ -169,8 +169,12 @@ class ShowProduct(DetailView):
 
         # форма покупки "в один клик"
         product_qs = Product.objects.filter(id=self.object.id)
+        try:
+            mfrer = '%s - ' % self.object.manufacturer.title
+        except:
+            mfrer = ''
         one_clk_form = OneClickByeForm(initial={'product':self.object,
-        'product_description':u'%s - %s %s' % (self.object.manufacturer,self.object.category.title_singular,self.object.title),
+        'product_description':u'%s%s %s' % (mfrer,self.object.category.title_singular,self.object.title),
         'product_price':self.object.price})
         one_clk_form.fields['product'].queryset = product_qs
         context['one_clk_form'] = one_clk_form
