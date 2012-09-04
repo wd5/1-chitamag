@@ -1,4 +1,4 @@
-{% load thumbnail siteblocks_extras %}
+{% load thumbnail siteblocks_extras pytils_numeral %}
 <div class="cart_item{% if loaded %} loaded{% endif %}" {% if loaded %}style="display: none;"{% endif %}>
     <input type="hidden" class="cart_item_id" value="{{ cart_item.id }}">
     <div class="cart_img col">
@@ -23,10 +23,10 @@
         <div class="cart_name">
             <p>Товар</p>
             <h3><a href="{{ cart_item.product.get_absolute_url }}">{{ cart_item.product.title }}</a></h3>
-            {% if cart_item.product.status == 'in_stock' %}
+            {% if not cart_item.product.status %}
                 <div class="available">есть в наличии</div>
             {% else %}
-                <div class="notavailable">под заказ</div>
+                <div class="notavailable">срок поставки: {{ cart_item.product.status }} {{ cart_item.product.status|choose_plural:"день,дня,дней" }}</div>
             {% endif %}
         </div>
 

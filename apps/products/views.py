@@ -77,6 +77,7 @@ class ShowCategory(TemplateView):
             filter_parameters_groops = category.get_all_feature_groups()
             filter_parameters_names = FeatureNameCategory.objects.published().filter(in_filter=True,
                 feature_group__id__in=filter_parameters_groops.values('id'))
+            selected_fn_ids = []
             for name in filter_parameters_names:
                 values = FeatureValue.objects.filter(product__id__in=products.values('id'),
                     feature_name__id=name.id).values('value').distinct().order_by('value')
@@ -86,11 +87,13 @@ class ShowCategory(TemplateView):
                         try:
                             if int(feature[0]) == name.id:
                                 setattr(name, 'selected', feature[1])
+                                selected_fn_ids.append(int(feature[0]))
                         except:
                             pass
                 setattr(name, 'values', values)
 
             context['filter_parameters'] = filter_parameters_names
+            context['selected_filter_parameters'] = filter_parameters_names.filter(id__in=selected_fn_ids)
 
             if mfr:
                 products = products.filter(manufacturer__id=mfr)
@@ -185,6 +188,8 @@ class ProductsSearch(TemplateView):
             q = self.request.GET['q']
         except:
             q = ''
+        if q=='':
+            q = '?'
         qs = products.filter(
             Q(title__icontains=q) |
             Q(category__title__icontains=q) |
@@ -194,6 +199,7 @@ class ProductsSearch(TemplateView):
             #            Q(art__icontains=q) |
             Q(price__icontains=q)
         )
+        qs = qs.exclude(category=None) #исключим все товары у которых нет категории
         context['catalog'] = qs
         context['query'] = q
         return context

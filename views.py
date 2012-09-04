@@ -149,7 +149,6 @@ def upload_xml(request):
                             cat_title = z.getAttribute('name')
                             cat_slug = slugify(cat_title)
                             cat_xml_id = z.getAttribute('id')
-                            cat_xml_num = z.getAttribute('num')
                             cat_up_id = z.getAttribute('up_id')
 
                             try:
@@ -169,12 +168,10 @@ def upload_xml(request):
                             if not exits_cat: # если категории с таким же xml_id не существует
                                 if parent_cat:
                                     new_category = Category(parent=parent_cat, title=cat_title, slug=cat_slug,
-                                        is_published=False,
-                                        xml_id=cat_xml_id, xml_num=cat_xml_num, xml_up_id=cat_up_id)
+                                        is_published=False, xml_id=cat_xml_id, xml_up_id=cat_up_id)
                                 else:
                                     new_category = Category(title=cat_title, slug=cat_slug,
-                                        is_published=False,
-                                        xml_id=cat_xml_id, xml_num=cat_xml_num)
+                                        is_published=False, xml_id=cat_xml_id)
                                 new_category.save()
 
                             if new_category: # если категория создана - то проверяем и создаём группы параметров и параметры
@@ -200,10 +197,11 @@ def upload_xml(request):
 
                         elif z.getAttribute('price'): # парсим товар
                             parsed = 'product'
-                            product_xml_num = z.getAttribute('num')
                             product_title = z.getAttribute('name')
-                            #product_xml_code = z.getAttribute('code')
+                            product_xml_code = z.getAttribute('code')
+                            product_ship = z.getAttribute('ship')
                             product_price = Decimal(z.getAttribute('price'))
+                            product_change_time = z.getAttribute('timestamp')
                             try:
                                 product_description = z.getElementsByTagName('description')[0].firstChild.nodeValue
                             except:
@@ -214,12 +212,30 @@ def upload_xml(request):
                             #action = z.getAttribute('action')
 
                             try:
-                                exits_prod = all_products.get(xml_num=product_xml_num)
+                                exits_prod = all_products.get(xml_code=product_xml_code)
                             except:
                                 exits_prod = False
 
+                            try:
+                                product_ship = int(product_ship)
+                            except:
+                                product_ship = 0
+
+                            if product_change_time:
+                                try:
+                                    year = int(product_change_time[:4])
+                                    month = int(product_change_time[4:6])
+                                    day = int(product_change_time[6:8])
+                                    hours = int(product_change_time[8:10])
+                                    minutes = int(product_change_time[10:12])
+                                    product_change_time = datetime.datetime(year, month, day, hours, minutes, 00)
+                                except:
+                                    product_change_time = None
+                            else:
+                                product_change_time = None
+
                             new_product = False
-                            if not exits_prod: # если продукта с таким же xml_num не существует, то создаём продукт
+                            if not exits_prod: # если продукта с таким же xml_code не существует, то создаём продукт
                                 try:
                                     prod_category = all_categories.get(xml_id=grp_id)
                                 except:
@@ -227,12 +243,13 @@ def upload_xml(request):
                                 if prod_category:
                                     category_feature_names = prod_category.get_feature_names()
                                     new_product = Product(category=prod_category, title=product_title,
-                                        description=product_description,
-                                        price=product_price, status='in_stock', xml_num=product_xml_num)
+                                        description=product_description, status=product_ship,
+                                        price=product_price, xml_code=product_xml_code, change_date=product_change_time)
                                 else:
                                     category_feature_names = False
                                     new_product = Product(title=product_title, description=product_description,
-                                        price=product_price, status='in_stock', xml_num=product_xml_num)
+                                        price=product_price, status=product_ship, xml_code=product_xml_code,
+                                        change_date=product_change_time)
                                 new_product.save()
                             else:
                                 prod_category = False
@@ -255,12 +272,20 @@ def upload_xml(request):
                                                     feature_group__title__exact=parameter_name_grp_title,
                                                     title=parameter_name)
                                             except:
-                                                parameter_model_object = False
+                                                #parameter_model_object = False
+                                                # создадим группу параметров и название параметра
+                                                if prod_category:
+                                                    new_param_group = FeatureGroup(category=prod_category, title=parameter_name_grp_title)
+                                                    new_param_group.save()
+                                                    parameter_model_object = FeatureNameCategory(feature_group=new_param_group, title=parameter_name)
+                                                    parameter_model_object.save()
+                                                else:
+                                                    parameter_model_object = False
                                             if parameter_model_object:
                                                 new_parameter_value = FeatureValue(product=new_product,
                                                     feature_name=parameter_model_object, value=parameter_value)
                                                 new_parameter_value.save()
-                                                # значения свойств
+                                # значения свойств
                                 property_array = z.getElementsByTagName(
                                     'property')
                                 if property_array:
@@ -268,7 +293,7 @@ def upload_xml(request):
                                         property_value = property.firstChild.nodeValue
                                         new_property = ProductProperty(product=new_product, value=property_value)
                                         new_property.save()
-                                        # изображения товара
+                                # изображения товара
                                 img_array = z.getElementsByTagName('img')
                                 if img_array:
                                     for img in img_array:
@@ -291,9 +316,8 @@ def upload_xml(request):
                                             try:
                                                 img_temp.write(urlopen(img_link).read())
                                                 img_temp.flush()
-                                                new_image = ProductImage(product=new_product)
                                                 new_image.image.save(
-                                                    u"product_image_%s-%s" % (new_product.pk, new_image.pk),
+                                                    u"product_image_%s-additional" % new_product.id,
                                                     File(img_temp))
                                                 new_image.save()
                                             except:
@@ -317,7 +341,8 @@ def upload_xml(request):
                             action_short_description = action_description.split(' ')[:30]
                             action_short_description = ' '.join(action_short_description)
                         except:
-                            action_description = False
+                            action_description = ''
+                            action_short_description = ''
                         try:
                             action_img_url = z.getElementsByTagName('img')[0].firstChild.nodeValue
                         except:

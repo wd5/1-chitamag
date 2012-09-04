@@ -7,12 +7,15 @@ from apps.users.views import show_cabinet, edt_profile_info, show_profile_form, 
 from apps.users.views import items_loader
 from apps.orders.views import check_oneclick_form
 
+from apps.products.management.commands.checkgoods import TestView
+
 from views import index
 
 #url(r'^captcha/', include('captcha.urls')),
 
 urlpatterns = patterns('',
     url(r'^$',index, name='index'),
+    (r'^test_load/$',TestView.as_view()),
     (r'^load_items/$',csrf_exempt(items_loader)),
     (r'^load_features_names/$',csrf_exempt(load_features_names)),
     (r'^check_oneclick_form/$',csrf_exempt(check_oneclick_form)),

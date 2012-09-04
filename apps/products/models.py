@@ -210,6 +210,9 @@ class Product(models.Model):
     def get_photos(self):
         return self.productimage_set.all()
 
+    def get_properties(self):
+        return self.productproperty_set.published()
+
     def get_feature_values(self):
         return self.featurevalue_set.all()
 

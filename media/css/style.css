@@ -97,8 +97,18 @@ h3 {
 	margin-top: 3px;
 }
 .page_h a {
-	margin-right: 24px;
+	margin-right: 20px;
 	white-space: nowrap;
+	position: relative;
+	top: 2px;
+}
+.page_h a.curr {
+	background: #f9f0d6;
+	color: #543f02;
+	font-weight: bold;
+	padding: 2px 6px 2px 6px;
+	border-radius: 3px;
+	text-decoration: none;
 }
 
 
@@ -529,6 +539,38 @@ a.btn1:hover, a.btn2:hover {color: #fff;}
 }
 .catalog_submenu .curr span {
 	display: block;
+}
+
+.unfilter {
+	width: 560px;
+	padding: 12px 0 30px 0;
+	margin: 0 0 0 40px;
+	font-size: 14px;
+	color: #888;
+	border-top: 1px solid #cccccc;
+}
+.unfilter_btn {
+	display: block;
+	text-decoration: none;
+	color: #fff;
+	font-weight: bold;
+	text-align: center;
+	background: url('../img/unfilter.png') no-repeat;
+	width: 88px;
+	height: 34px;
+	padding: 2px 0 0 0;
+	margin-top: -3px;
+	float: right;
+}
+.unfilter_btn:hover {
+	background-position: 0 -44px;
+	color: #fff;
+}
+.unfilter_btn:active {
+	background-position: 0 -88px;
+}
+.unfilter p {
+	width: 460px;
 }
 
 /*/catalog_menu*/

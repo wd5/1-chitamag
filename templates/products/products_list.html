@@ -32,7 +32,7 @@
     {% else %}
         <div class="items">
 
-            {% if not query %}                
+            {% if not query %}
                 <div class="filters">
                 {% if category.manufacturers %}
                     <div class="filter">
@@ -75,8 +75,52 @@
 
                 <div class="filters_b"></div>
             </div><!--/filters-->
+
+                {% if request.GET.price_filter or request.GET.mfr or request.GET.features %}
+                    <div class="unfilter">
+                        <a class="unfilter_btn" href="{{ request.path }}">Отменить</a>
+                        {% if not request.GET.features %}
+                            {% if request.GET.price_filter and not request.GET.mfr %}
+                                <p>Вы применили фильтр по «Цена»</p>
+                            {% endif %}
+                            {% if not request.GET.price_filter and request.GET.mfr %}
+                                <p>Вы применили фильтр по «Производители»</p>
+                            {% endif %}
+                            {% if request.GET.price_filter and request.GET.mfr %}
+                                <p>Вы применили фильтр по «Производители» и «Цена»</p>
+                            {% endif %}
+                        {% else %}
+                            {% if request.GET.price_filter and not request.GET.mfr %}
+                                <p>Вы применили фильтр по «Цена»{% if selected_filter_parameters %},
+                                        {% for item in selected_filter_parameters %}{% if forloop.last %} и {% else %}{% if not forloop.first %},{% endif %}{% endif %} «{{ item.title }}»{% endfor %}
+                                    {% endif %}
+                                </p>
+                            {% endif %}
+                            {% if not request.GET.price_filter and request.GET.mfr %}
+                                <p>Вы применили фильтр по «Производители»{% if selected_filter_parameters %},
+                                        {% for item in selected_filter_parameters %}{% if forloop.last %} и {% else %}{% if not forloop.first %},{% endif %}{% endif %} «{{ item.title }}»{% endfor %}
+                                    {% endif %}</p>
+                            {% endif %}
+                            {% if request.GET.price_filter and request.GET.mfr %}
+                                <p>Вы применили фильтр по «Производители» и «Цена»{% if selected_filter_parameters %},
+                                        {% for item in selected_filter_parameters %}{% if forloop.last %} и {% else %}{% if not forloop.first %},{% endif %}{% endif %} «{{ item.title }}»{% endfor %}
+                                    {% endif %}</p>
+                            {% endif %}
+                            {% if not request.GET.price_filter and not request.GET.mfr %}
+                                <p>Вы применили фильтр по
+                                    {% for item in selected_filter_parameters %}
+                                        {% if not forloop.first %}{% if forloop.last %}и{% else %},{% endif %}{% endif %} «{{ item.title }}»
+                                    {% endfor %}
+                                </p>
+                            {% endif %}
+
+                        {% endif %}
+
+
+                    </div>
+                {% endif %}
             {% endif %}
-        
+
             {% autopaginate catalog 12 %}
                 {% for item in catalog %}
                     <div class="item">
