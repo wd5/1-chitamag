@@ -80,7 +80,8 @@ class ProductAdmin(AdminImageMixin, admin.ModelAdmin):
     list_editable = ('order','is_published','price',)
     list_filter = ('is_published','category','manufacturer',)
     search_fields = ('title', 'price','xml_code',)
-    filter_horizontal = ('related_products',)
+#    filter_horizontal = ('related_products',)
+    raw_id_fields = ('related_products',)
     exclude = ('xml_code',)
     inlines = [ProductImageInline, ProductPropertyInline, FeatureValueInline, ]
     form = ProductAdminForm
