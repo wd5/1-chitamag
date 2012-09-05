@@ -15,12 +15,38 @@
         <div class="text">
             <h2>Ваш заказ успешно оформлен под номером {{ order.id }}</h2>
             <p>Вся информация о заказе выслана на контактный e-mail. Наш менеджер скоро с Вами свяжется чтобы уточнить время доставки.</p>
-            {% if reg_form %}
-                <p>Вы занесли уже большую часть информации, чтобы участвовать в наших акциях и специальных предложения. Мы советуем Вам зарегистрироваться на нашем сайте.</p>
-            {% endif %}
         </div><!--/text-->
 
+        <div class="final_info">
+            <p><strong>Получатель</strong>: {{ order.first_name }} {{ order.last_name }}</p>
+            <p><strong>Телефон</strong>: {{ order.phone }}</p>
+            {% if order.order_carting == 'selfcarting' %}
+                <p><strong>Тип доставки</strong>: Самовывоз</p>
+            {% else %}
+                <p><strong>Адрес доставки</strong>: {{ order.addresss }}</p>
+            {% endif %}
+        </div><!--/final_info-->
+
+        <div class="final_contents">
+            {% for order_product in order.get_products %}
+                <div class="final_item">
+                    <div class="final_item_name">{{ order_product.product.title }} х {{ order_product.count }}</div>
+                    <div class="final_item_price">{{ order_product.get_str_total }} руб.</div>
+                </div>
+                {% for product_service in order_product.get_services %}
+                    <div class="final_item">
+                        <div class="final_item_name">{{ product_service.service.product_service }} х {{ product_service.count }}</div>
+                        <div class="final_sitem_price">{{ product_service.get_str_total }} руб.</div>
+                    </div>
+                {% endfor %}
+            {% endfor %}
+            <div class="final_sum">{{ order.total_price }} руб.</div>
+        </div><!--/final_contents-->
+
         {% if reg_form %}
+            <div class="text">
+                <p>Вы занесли уже большую часть информации, чтобы участвовать в наших акциях и специальных предложения. Мы советуем Вам зарегистрироваться на нашем сайте.</p>
+            </div>
             <form class="final_reg" method="post" action="/registration_form/">
                 <div style="display: none;">
                     {{ reg_form.email }}

@@ -27,7 +27,8 @@
 .promo_4_l, .promo_4_r,
 .cabinet_info,
 .history_status,
-.cart_option_qty ul, .cart_option_qty li {
+.cart_option_qty ul, .cart_option_qty li,
+.final_item_name, .final_item_price {
 	*display:inline;
 	*zoom:1;
 }

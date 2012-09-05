@@ -1386,6 +1386,39 @@ a.btn1:hover, a.btn2:hover {color: #fff;}
 }
 .reg_submit:hover {background-position: -220px -550px;}
 .reg_submit:active {background-position: -440px -550px;}
+
+.final_info {
+	margin: 36px 0 24px 0;
+	padding: 0 0 24px 12px;
+	border-bottom: 1px dashed #999;
+}
+.final_info h3 {
+	font-size: 16px;
+}
+.final_item {
+	margin: 0 0 9px 0;
+}
+.final_item_name, .final_item_price {
+	display: inline-block;
+	vertical-align: top;
+}
+.final_item_name {
+	width: 400px;
+	padding: 0 0 0 12px;
+}
+.final_item_price {
+	width: 170px;
+	text-align: right;
+}
+
+.final_sum {
+	font-weight: bold;
+	font-size: 16px;
+	text-align: right;
+	border-top: 1px dashed #999;
+	margin: 24px 0 0 0;
+	padding: 12px 11px 0 0;
+}
 /*/order_final*/
 
 
