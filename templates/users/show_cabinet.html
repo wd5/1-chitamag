@@ -46,8 +46,12 @@
                             <td class="history_items_col">
                                 {% for product in order.get_products %}
                                     <div class="history_item">
-                                        <div>{{ product.product.category.title_singular|title }}</div>
-                                        <div><strong>{{ product.product.title }}</strong></div>
+                                        {% if product.product %}
+                                            <div>{{ product.product.category.title_singular|title }}</div>
+                                            <div><strong>{{ product.product.title }}</strong></div>
+                                        {% else %}
+                                            <div><strong>{{ product.product_description }}</strong></div>
+                                        {% endif %}
                                     </div>
                                 {% endfor %}
                             </td>
