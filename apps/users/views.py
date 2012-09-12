@@ -1,18 +1,18 @@
 # -*- coding: utf-8 -*-
-import datetime, settings
+import  settings
 from django.db.models.loading import get_model
 from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.template.loader import render_to_string
 from django.views.decorators.csrf import csrf_exempt
-from django.views.generic import FormView, DetailView, TemplateView, View
+from django.views.generic import FormView, TemplateView, View
 from apps.users.forms import ProfileForm, RegistrationForm
 from apps.users.models import Profile
 from apps.siteblocks.models import Settings
 from apps.orders.models import Order
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
-from django.contrib.auth import logout as auth_logout, authenticate as auth_check, login as auth_login
+from django.contrib.auth import  authenticate as auth_check, login as auth_login
 
 def send_email_registration(username, password, to_email):
     from django.core.mail import send_mail
@@ -123,8 +123,8 @@ def GetLoadIds(queryset, loaded_count):
         counter = counter + 1
         div = counter % loaded_count
         next_id_loaded_items = u'%s,%s' % (next_id_loaded_items, item.id)
-        if div == 0:
-            next_id_loaded_items = u'%s|' % next_id_loaded_items
+        #if div == 0:
+        #    next_id_loaded_items = u'%s|' % next_id_loaded_items
 
     if next_id_loaded_items.startswith(',') or next_id_loaded_items.startswith('|'):
         next_id_loaded_items = next_id_loaded_items[1:]
@@ -136,8 +136,9 @@ def GetLoadIds(queryset, loaded_count):
     if next_block_ids != '':
         next_block_ids = next_block_ids.split(',')
         next_block_ids = len(next_block_ids)
-        if loaded_count > next_block_ids:
-            loaded_count = next_block_ids
+        #if loaded_count > next_block_ids:
+        #    loaded_count = next_block_ids
+        loaded_count = next_block_ids
     else:
         loaded_count = False
 
@@ -167,7 +168,7 @@ class ShowCabinetView(TemplateView):
                 try:
                     loaded_count = int(Settings.objects.get(name='loaded_count').value)
                 except:
-                    loaded_count = 2
+                    loaded_count = 5
                 queryset = profile.get_orders()
                 result = GetLoadIds(queryset, loaded_count)
                 splited_result = result.split('!')
