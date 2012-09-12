@@ -2,7 +2,6 @@
 import os, datetime
 from django.utils.translation import ugettext_lazy as _
 from django.db import models
-from django.contrib.auth.models import User
 from apps.utils.managers import PublishedManager
 
 from pytils.translit import translify
@@ -39,7 +38,7 @@ def file_path_Product(instance, filename):
     return os.path.join('images','products',  translify(filename).replace(' ', '_') )
 
 def file_path_Product(instance, filename):
-     return os.path.join('images','products',  translify(filename).replace(' ', '_') )
+    return os.path.join('images','products',  translify(filename).replace(' ', '_') )
 
 def file_path_Action(instance, filename):
     return os.path.join('images','actions',  translify(filename).replace(' ', '_') )
