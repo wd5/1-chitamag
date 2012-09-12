@@ -1,0 +1,9 @@
+<div title="{{ op_id }}" class="tr">
+    <p>Услуги к товару на сумму: {{ op_services_total_price }} .руб</p>
+    {% for service in op_services %}
+        <div {% cycle 'class="serv1"' 'class="serv2"' %}>
+            <input value="{{ service.service_description }}" class="serv_descr" size="65" maxlength="255" type="text"> <span>Цена:</span><input type="text" class="serv_price" value="{{ service.service_price|floatformat:2 }}" ><span>Количество: {{ service.count }}</span>
+        </div>
+    {% endfor %}
+</div>
+s

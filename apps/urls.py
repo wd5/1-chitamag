@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
-from django.conf.urls.defaults import patterns, include, url
+from django.conf.urls.defaults import patterns, url
 from django.contrib.auth import views as auth_views
 from django.views.decorators.csrf import csrf_exempt
 from apps.products.views import show_category, show_product, actions_list, show_action, load_catalog, search_products, actions_list_archive, load_features_names
 from apps.users.views import show_cabinet, edt_profile_info, show_profile_form, registration_form
 from apps.users.views import items_loader
-from apps.orders.views import check_oneclick_form
+from apps.orders.views import check_oneclick_form, load_serv_rows
 
 from apps.products.management.commands.checkgoods import TestView
 
@@ -18,6 +18,7 @@ urlpatterns = patterns('',
     (r'^test_load/$',TestView.as_view()),
     (r'^load_items/$',csrf_exempt(items_loader)),
     (r'^load_features_names/$',csrf_exempt(load_features_names)),
+    (r'^load_serv_rows/$',csrf_exempt(load_serv_rows)),
     (r'^check_oneclick_form/$',csrf_exempt(check_oneclick_form)),
     (r'^catalog/search/$',search_products,),
     url(r'^catalog/$', index, name='show_catalog'),

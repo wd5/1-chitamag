@@ -1,20 +1,16 @@
 # -*- coding: utf-8 -*-
-import datetime
 from django.core.mail.message import EmailMessage
 from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.template.loader import render_to_string
 from django.views.decorators.csrf import csrf_exempt, csrf_protect
-from django.views.generic import FormView, DetailView, TemplateView, View
-from apps.orders.models import Cart, CartProduct, Order, OrderProduct, CartProductService, OrderProductService
+from django.views.generic import FormView, TemplateView, View
+from apps.orders.models import Cart, CartProduct, OrderProduct, CartProductService, OrderProductService
 from apps.orders.forms import RegistrationOrderForm, OneClickByeForm
 from apps.products.models import Product, CategoryService
 from apps.users.models import Profile
 from apps.users.forms import RegistrationForm
-from apps.pages.models import Page
 from apps.siteblocks.models import Settings
-from django.core.urlresolvers import reverse
-from apps.orders.forms import RegistrationOrderForm
 from pytils.numeral import choose_plural
 import settings
 
@@ -620,3 +616,31 @@ class CheckOneClkFormView(View):
             return HttpResponseBadRequest()
 
 check_oneclick_form = CheckOneClkFormView.as_view()
+
+class LoadServRowsAdmin(View):
+    def post(self, request, *args, **kwargs):
+        if request.is_ajax():
+            if 'ids' not in request.POST:
+                return HttpResponseBadRequest()
+
+            ids = request.POST['ids']
+            ids = ids.split(',')
+
+            try:
+                order_products = OrderProduct.objects.filter(id__in=ids)
+            except OrderProduct.DoesNotExist:
+                return HttpResponseBadRequest()
+            html=''
+            for item in order_products:
+                html += render_to_string(
+                    'orders/loaded_serv_template.html',
+                        {
+                        'op_id': item.id,
+                        'op_services_total_price': item.get_service_str_total(),
+                        'op_services': item.get_services()
+                    })
+            return HttpResponse(html)
+        else:
+            return HttpResponseBadRequest()
+
+load_serv_rows = LoadServRowsAdmin.as_view()

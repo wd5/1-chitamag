@@ -2,7 +2,7 @@
 from django.contrib import admin
 from django import forms
 from django.utils.safestring import mark_safe
-from apps.orders.models import Cart,CartProduct,Order,OrderProduct, OneClickBye, CartProductService, OrderProductService
+from apps.orders.models import  CartProduct,Order,OrderProduct, OneClickBye
 
 class CartProductInlines(admin.TabularInline):
     model = CartProduct
@@ -25,12 +25,27 @@ class OrderProductInlines(admin.TabularInline):
     readonly_fields = ('product','count',)
     extra = 0
 
+class OrderAdminForm(forms.ModelForm):
+
+    class Meta:
+        model = Order
+
+    class Media:
+        css = {
+          "all": ('/media/css/order_inline_services.css',)
+        }
+        js = (
+            '/media/js/jquery.js',
+            '/media/js/order_inline_services.js',
+        )
+
 class OrderAdmin(admin.ModelAdmin):
     list_display = ('id','create_date','fullname','admin_summary',)
     list_display_links = ('id','fullname','create_date',)
     search_fields = ('fullname','contact_info',)
     list_filter = ('create_date',)
     readonly_fields = ('create_date',)
+    form = OrderAdminForm
     inlines = [OrderProductInlines]
 
 class OrderProductServiceAdmin(admin.ModelAdmin):
