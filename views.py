@@ -4,14 +4,12 @@ import os
 from urllib2 import urlopen
 from django import http
 from django.conf import settings
-from django.views.generic.simple import direct_to_template
 from pytils.translit import translify, slugify
 from django.views.decorators.csrf import csrf_exempt
 from django.core.files import File
 from django.core.files.temp import NamedTemporaryFile
 from xml.dom.minidom import *
 from apps.products.models import Action, Category, Product, FeatureGroup, FeatureNameCategory, ProductImage, ProductProperty, FeatureValue
-from django.http import HttpResponseRedirect, HttpResponse
 
 try:
     from PIL import Image
@@ -168,10 +166,10 @@ def upload_xml(request):
                             if not exits_cat: # если категории с таким же xml_id не существует
                                 if parent_cat:
                                     new_category = Category(parent=parent_cat, title=cat_title, slug=cat_slug,
-                                        is_published=False, xml_id=cat_xml_id, xml_up_id=cat_up_id)
+                                        xml_id=cat_xml_id, xml_up_id=cat_up_id)
                                 else:
                                     new_category = Category(title=cat_title, slug=cat_slug,
-                                        is_published=False, xml_id=cat_xml_id)
+                                        xml_id=cat_xml_id)
                                 new_category.save()
 
                             if new_category: # если категория создана - то проверяем и создаём группы параметров и параметры
