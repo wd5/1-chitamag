@@ -3,7 +3,7 @@
         $("#id_phone").mask("(999) 999-9999");
     });
 </script>
-<form class="oneclick_form" id="oneclick_form" method="post" action="">
+<form class="oneclick_form" id="oneclick_form" method="post" action="">{% csrf_token %}
     <h2>Обратный звонок</h2>
     <p>Пожалуйста, заполните краткую контактную информацию. Наши сотрудники свяжутся с вами в удобное для вас время.</p>
 

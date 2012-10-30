@@ -39,7 +39,7 @@
         <div class="text text_page">
             {{ guests.content|safe }}
         </div>
-        <form action="#guests" method="post" class="guest_form">
+        <form action="#guests" method="post" class="guest_form">{% csrf_token %}
         {% if send %}
             <p>Приглашение отправлено на Ваш адрес электронной почты.</p>
         {% else %}

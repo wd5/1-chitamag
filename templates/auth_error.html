@@ -19,7 +19,7 @@
             <div class="text">
                 {{ form.non_field_errors  }}
             </div><!--/text-->
-            <form class="auth_form" id="auth_form" method="post" action="{% url auth_login %}?next={{ next_url }}">
+            <form class="auth_form" id="auth_form" method="post" action="{% url auth_login %}?next={{ next_url }}">{% csrf_token %}
                 <div class="input input3">
                     <label>E-mail:</label>
                     {{ auth_form.username }}{{ auth_form.username.errors }}<a href="/registration_form/">Зарегистрироваться</a>

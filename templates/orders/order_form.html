@@ -11,7 +11,7 @@
         <h1>Заказ оформлен</h1>
     </div>{% comment %}
     {{ order_form.errors }}{% endcomment %}
-    <form class="order_form" method="post" action="/order_form_step2/">
+    <form class="order_form" method="post" action="/order_form_step2/">{% csrf_token %}
         <div style="display: none;">{{ order_form.profile }}
             {{ order_form.profile.errors }}
             {{ order_form.order_carting }}

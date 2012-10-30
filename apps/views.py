@@ -28,7 +28,6 @@ class IndexView(TemplateView):
 
         context['big_banners'] = big_banners
         context['slider_products'] = slider_products
-
         return context
 
 index = IndexView.as_view()

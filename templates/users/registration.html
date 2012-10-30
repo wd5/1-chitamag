@@ -15,7 +15,7 @@
     </div>
 
     <div class="order_final">
-        <form class="final_reg" method="post" action="/registration_form/">
+        <form class="final_reg" method="post" action="/registration_form/">{% csrf_token %}
             <div class="input input3">
                 <label>E-mail</label>
                 {{ reg_form.email }}

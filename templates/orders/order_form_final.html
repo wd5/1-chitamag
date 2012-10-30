@@ -47,7 +47,7 @@
             <div class="text">
                 <p>Вы занесли уже большую часть информации, чтобы участвовать в наших акциях и специальных предложения. Мы советуем Вам зарегистрироваться на нашем сайте.</p>
             </div>
-            <form class="final_reg" method="post" action="/registration_form/">
+            <form class="final_reg" method="post" action="/registration_form/">{% csrf_token %}
                 <div style="display: none;">
                     {{ reg_form.email }}
                     {{ reg_form.username.errors }}

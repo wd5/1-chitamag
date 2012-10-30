@@ -59,18 +59,20 @@
                     {% endthumbnail %}
                     </a>
                 </div>
-                <div class="promo_3">
-                    <a class="promo_a" href="{{ small_discount.get_absolute_url }}">
-                        <h2>{{ small_discount.title }}</h2>
-                        <div class="oldprice"><span>{{ small_discount.get_str_price_old }} руб.</span></div>
-                        <div class="item_price">{{ small_discount.get_str_price }} <i class="r">руб.</i></div>
-                        <div class="promo_3_img">
-                            {% thumbnail small_discount.image "116" crop="center" as im %}
-                                <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}"/>
-                            {% endthumbnail %}
-                        </div>
-                    </a>
-                </div>
+                {% if small_discount %}
+                    <div class="promo_3">
+                        <a class="promo_a" href="{{ small_discount.get_absolute_url }}">
+                            <h2>{{ small_discount.title }}</h2>
+                            <div class="oldprice"><span>{{ small_discount.get_str_price_old }} руб.</span></div>
+                            <div class="item_price">{{ small_discount.get_str_price }} <i class="r">руб.</i></div>
+                            <div class="promo_3_img">
+                                {% thumbnail small_discount.image "116" crop="center" as im %}
+                                    <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}"/>
+                                {% endthumbnail %}
+                            </div>
+                        </a>
+                    </div>
+                {% endif %}
             {% endif %}
 
 {% comment %}            <div class="promo_2">
