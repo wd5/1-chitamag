@@ -2,7 +2,7 @@
 DATABASE_NAME = u'chitamag'
 PROJECT_NAME = u'chitaMag'
 SITE_NAME = u'ЧитаМаг'
-DEFAULT_FROM_EMAIL = u'support@chitamag.octweb.ru'
+DEFAULT_FROM_EMAIL = u'support@chitamag.ru'
 
 from config.base import *
 

@@ -1,12 +1,10 @@
 # -*- coding: utf-8 -*-
-from django.contrib.admin.options import InlineModelAdmin
-from django.utils.translation import ugettext_lazy as _
 from django.contrib import admin
 from django import forms
 from apps.utils.widgets import Redactor
 from sorl.thumbnail.admin import AdminImageMixin
 from mptt.admin import MPTTModelAdmin
-from apps.utils.customfilterspec import CustomFilterSpec
+#from apps.utils.customfilterspec import CustomFilterSpec
 
 from models import *
 
@@ -48,7 +46,7 @@ class CategoryAdmin(MPTTModelAdmin):
     form = CategoryAdminForm
     exclude = ('xml_id','xml_up_id',)
     inlines = [FeatureGroupInline,]
-    custom_filter_spec = {'parent': Category.objects.filter(parent=None)}
+    #custom_filter_spec = {'parent': Category.objects.filter(parent=None)}
 
 admin.site.register(Category, CategoryAdmin)
 
@@ -85,7 +83,7 @@ class ProductAdmin(AdminImageMixin, admin.ModelAdmin):
     exclude = ('xml_code',)
     inlines = [ProductImageInline, ProductPropertyInline, FeatureValueInline, ]
     form = ProductAdminForm
-    custom_filter_spec = {'category': Category.objects.exclude(parent=None)}
+    #custom_filter_spec = {'category': Category.objects.exclude(parent=None)}
 
 
 admin.site.register(Product, ProductAdmin)
@@ -118,7 +116,7 @@ class CategoryServiceAdmin(admin.ModelAdmin):
     list_editable = ('price',)
     list_filter = ('price','category',)
     form = CategoryServiceAdminForm
-    custom_filter_spec = {'category': Category.objects.exclude(parent=None)}
+    #custom_filter_spec = {'category': Category.objects.exclude(parent=None)}
 
 
 admin.site.register(CategoryService, CategoryServiceAdmin)

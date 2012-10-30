@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 
 from django.db import models
-from django.contrib.admin.filterspecs import FilterSpec, ChoicesFilterSpec, RelatedFilterSpec
+#from django.contrib.admin.filterspecs import FilterSpec, ChoicesFilterSpec, RelatedFilterSpec
 from django.utils.encoding import smart_unicode
-from django.utils.translation import ugettext as _
 
 class CustomFilterSpec(FilterSpec):
     """
