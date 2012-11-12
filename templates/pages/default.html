@@ -2,11 +2,11 @@
 
 {% load thumbnail siteblocks_extras %}
 
-{% if page.title %}
+{% comment %}{% if page.title %}
     {% block title %}
         {{ page.title }} &mdash;
     {% endblock %}
-{% endif %}
+{% endif %}{% endcomment %}
 
 {% block main %}
     <div class="page_h">
