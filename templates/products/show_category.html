@@ -14,14 +14,14 @@
             {% if is_subcat %}
                 <a href="{{  category.parent.get_absolute_url }}">{{ category.parent.title }}</a> /
             {% else %}
-                <a href="{{  category.get_absolute_url }}">{{ category.title }}</a> /
+                {% comment %}<a href="{{  category.get_absolute_url }}">{{ category.title }}</a> /{% endcomment %}
             {% endif %}
         </div>
 
         <div class="page_h">
-            {% if is_subcat %}
+{#            {% if is_subcat %}#}
                 <h1>{{ category.title }}</h1>
-            {% endif %}
+{#            {% endif %}#}
             <span>
                 {% if request.GET.sort %}
                     {% if request.GET.sort == 'pasc' %}
