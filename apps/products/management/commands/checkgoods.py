@@ -19,6 +19,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         return start_parse()
 
+
 class TestView(TemplateView):
     template_name = 'index.html'
 
@@ -26,6 +27,7 @@ class TestView(TemplateView):
         context = super(TestView, self).get_context_data(**kwargs)
         context['parse_info'] = start_parse()
         return context
+
 
 def start_parse():
     try:
@@ -58,6 +60,10 @@ def start_parse():
                     product_xml_code = z.getAttribute('code')
                     product_ship = z.getAttribute('ship')
                     product_price = Decimal(z.getAttribute('price'))
+                    try:
+                        product_old_price = Decimal(z.getAttribute('old_price'))
+                    except:
+                        product_old_price = False
                     product_change_time = z.getAttribute('timestamp')
                     try:
                         product_description = z.getElementsByTagName('description')[0].firstChild.nodeValue
@@ -113,6 +119,21 @@ def start_parse():
                             new_product = Product(title=product_title, description=product_description,
                                 price=product_price, status=product_ship, xml_code=product_xml_code,
                                 change_date=product_change_time)
+                        if product_old_price:
+                            new_product.price_old = product_old_price
+
+                        # добавим данные об типе предложения
+                        flag_array = z.getElementsByTagName('flag')
+                        if flag_array:
+                            for flag in flag_array:
+                                flag_name = flag.getAttribute('name')
+                                if flag_name == 'superprice':
+                                    new_product.is_discount = True
+                                elif flag_name == 'hit':
+                                    new_product.is_hit = True
+                                elif flag_name == 'new':
+                                    new_product.is_new = True
+
                         new_product.save()
                         added += 1
                     else: # если продукт уже есть - смотрим изменения и изменяем
@@ -125,7 +146,7 @@ def start_parse():
                             exits_prod.price = product_price
                         if exits_prod.status != product_ship:
                             exits_prod.status = product_ship
-                            #проверим изменились ли свойства
+                        #проверим изменились ли свойства
                         property_array = z.getElementsByTagName('property')
                         product_properties = exits_prod.get_properties()
                         if property_array:
@@ -201,7 +222,7 @@ def start_parse():
                         #проверим изменилась ли категория
                         parameter_array = z.getElementsByTagName('parameter')
                         product_features = exits_prod.get_feature_values()
-                        if exits_prod.category==None or exits_prod.category.xml_id != grp_id:
+                        if exits_prod.category == None or exits_prod.category.xml_id != grp_id:
                             if prod_category: # если категория с таким идентификатором есть - то
                                 exits_prod.category = prod_category
                                 # удалин значения параметров товара

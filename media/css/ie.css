@@ -28,7 +28,13 @@
 .cabinet_info,
 .history_status,
 .cart_option_qty ul, .cart_option_qty li,
-.final_item_name, .final_item_price {
+.final_item_name, .final_item_price,
+.items_listed .item_t,
+.items_listed .item_b,
+.items_listed .item_name,
+.items_listed .item_price,
+.items_listed .item_status,
+.page_h h1, .page_h ul, .page_h li {
 	*display:inline;
 	*zoom:1;
 }

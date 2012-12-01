@@ -671,21 +671,21 @@ function SetPriceSlider(min, max, start)
 		min: min,
 		max: max,
 		slide: function( event, ui ) {
-            $( ".filter_price_input input" ).val( ui.value );
+            $(this).parent().find( ".filter_price_input input" ).val( ui.value );
 		},
         stop: function( event, ui ) {
-            var val = $(this).slider( "option", "value" )
-            var exist = false
-            var curr_send_link = $('a.filter_submit_btn').attr('href')
+            var val = $(this).slider( "option", "value");
+            var exist = false;
+            var curr_send_link = $('a.filter_submit_btn').attr('href');
             if (curr_send_link=='#')
                 {$('a.filter_submit_btn').attr('href','?price_filter='+val)}
             else
                 {
                     var get_param_array = curr_send_link.split('&');
-                    length = get_param_array.length
+                    length = get_param_array.length;
                     for (var i = 0; i <= length-1; i++)
                         {
-                            part = get_param_array[i].split('=')
+                            part = get_param_array[i].split('=');
                             if (part[0].substring(0, 1) == "?")
                                 {
                                     part[0] = part[0].substring(1)
@@ -699,7 +699,7 @@ function SetPriceSlider(min, max, start)
                         }
                     if (!exist)
                         {get_param_array.push('price_filter='+val);}
-                    var curr_send_link = get_param_array.join('&')
+                    var curr_send_link = get_param_array.join('&');
                     if (curr_send_link != "?")
                         {
                             curr_send_link = '?' + curr_send_link
@@ -710,4 +710,68 @@ function SetPriceSlider(min, max, start)
         }
 	});
 	$( ".filter_price_input" ).val( start );
+}
+
+function SetShipSlider(min, max, start)
+{
+    $( "#filter_ship_slider" ).slider({
+		range: "min",
+		value: start,
+		min: min,
+		max: max,
+		slide: function( event, ui ) {
+            $(this).parent().find( ".filter_price_input input" ).val( ui.value );
+		},
+        stop: function( event, ui ) {
+            var val = $(this).slider( "option", "value" );
+            var exist = false;
+            var curr_send_link = $('a.filter_submit_btn').attr('href');
+            $(this).parent().find('.plural_value').html(plural_str(val, 'день','дня','дней'));
+            if (curr_send_link=='#')
+                {$('a.filter_submit_btn').attr('href','?ship_filter='+val)}
+            else
+                {
+                    var get_param_array = curr_send_link.split('&');
+                    length = get_param_array.length
+                    for (var i = 0; i <= length-1; i++)
+                        {
+                            part = get_param_array[i].split('=')
+                            if (part[0].substring(0, 1) == "?")
+                                {
+                                    part[0] = part[0].substring(1)
+                                }
+                            if (part[0]=='ship_filter')
+                                {
+                                    exist = true
+                                    part[1]=val
+                                }
+                            get_param_array[i] = part.join('=')
+                        }
+                    if (!exist)
+                        {get_param_array.push('ship_filter='+val);}
+                    var curr_send_link = get_param_array.join('&')
+                    if (curr_send_link != "?")
+                        {
+                            curr_send_link = '?' + curr_send_link
+                        }
+                    $('a.filter_submit_btn').attr('href',curr_send_link)
+                }
+
+        }
+	});
+	$( ".filter_ship_input" ).val( start );
+}
+
+function plural_str(i, str1, str2, str3){
+    function plural (a){
+        if ( a % 10 == 1 && a % 100 != 11 ) return 0
+            else if ( a % 10 >= 2 && a % 10 <= 4 && ( a % 100 < 10 || a % 100 >= 20)) return 1
+            else return 2;
+        }
+
+    switch (plural(i)) {
+        case 0: return str1;
+        case 1: return str2;
+        default: return str3;
+    }
 }

@@ -1,4 +1,4 @@
-{% load thumbnail pagination_tags i18n products_extras %}
+{% load thumbnail pagination_tags i18n products_extras pytils_numeral %}
 
 {% if not product %}
     {% if is_index %}
@@ -24,99 +24,130 @@
                          </div>
                          <div class="item_b">
                              <h3 class="item_name"><a href="{{ item.get_absolute_url }}">{{ item.category.title_singular|title }} {{ item.title }}</a></h3>
+                             {% if item.status %}
+                                 <div class="item_status item_wait">Срок доставки {{ item.status }} {{ item.status|choose_plural:"день,дня,дней" }}</div>
+                             {% else %}
+                                 <div class="item_status item_available">Есть в наличии</div>
+                             {% endif %}
                              <div class="item_price">{{ item.get_str_price }} <i class="r">руб.</i></div>
                          </div>
                     </div>
                 {% endfor %}
             </div><!--/items-->
     {% else %}
-        <div class="items">
+        <div class="items {% if request.GET.view == 'list' %}items_listed{% endif %} ">
 
             {% if not query %}
-                <div class="filters">
-                {% if category.manufacturers %}
-                    <div class="filter">
-                        <div class="filter_h">Производители</div>
-                        <ul class="filter_brands">
-                            {% for item in category.manufacturers %}
-                                <li{% if mfr == item.id %} class="curr"{% endif %}><a href="#" name="{{ item.id }}">{{ item.title }}</a></li>
-                            {% endfor %}
-                        </ul>
-                    </div>
-                {% endif %}
-
-                <div class="filter">
-                    <div class="filter_h">Цена</div>
-                    <div class="filter_price">
-                        До <span class="input filter_price_input"><input type="text" value="{{ price_filter|default:max_price|floatformat:0 }}" /></span> руб.
-                        <div id="filter_price_slider"></div>
-                    </div>
-                    <script type="text/javascript">
-                        SetPriceSlider({{ min_price|floatformat:0 }},{{ max_price|floatformat:0 }},{{ price_filter|default:max_price|floatformat:0 }});
-                    </script>
-                </div>
-                {{ feature_values }}
-                {% if is_subcat %} {# если не подкатегория - линамические фильтры не выводим #}
-                    {% for parameter in filter_parameters %}
-                        {% if parameter.values %}
+                <div class="filters {% if not additional_filter %}filters_2{% endif %}">
+                    <div class="filter_pl">
+                        <div class="filter_pl_content">
                             <div class="filter">
-                                <div class="filter_h">{{ parameter.title }}</div>
-                                <ul class="filter_params" name="{{ parameter.id }}">
-                                    {% for value in parameter.values %}
-                                        <li {% if parameter.selected == value.value %}class="curr"{% endif %} ><a href="#">{{ value.value }}</a></li>
-                                    {% endfor %}
-                                </ul>
+                                <div class="filter_h">Цена</div>
+                                <div class="filter_price">
+                                    До <span class="input filter_price_input"><input type="text" value="{{ price_filter|default:max_price|floatformat:0 }}" /></span> руб.
+                                    <div id="filter_price_slider"></div>
+                                </div>
+                                <script type="text/javascript">
+                                    SetPriceSlider({{ min_price|floatformat:0 }},{{ max_price|floatformat:0 }},{{ price_filter|default:max_price|floatformat:0 }});
+                                </script>
                             </div>
-                        {% endif %}
-                    {% endfor %}
-                {% endif %}
-                {% comment %}<div class="filter_submit"><input class="btn1 filter_submit_btn" type="submit" value="Применить" /></div>{% endcomment %}
-                <div class="filter_submit"><a class="btn1 filter_submit_btn" href="{% get_request_parameters request.GET 'True' '' %}">Применить</a></div>
 
-                <div class="filters_b"></div>
-            </div><!--/filters-->
+                            <div class="filter">
+                                <div class="filter_h">Срок поставки</div>
+                                <div class="filter_price">
+                                    {% ifequal ship_filter 0 %}
+                                        До <span class="input filter_price_input">
+                                        <input type="text" value="{{ ship_filter }}" />
+                                        </span> <span class="plural_value">{{ ship_filter|choose_plural:"день,дня,дней"  }}</span>
+                                    {% else %}
+                                        До <span class="input filter_price_input">
+                                        <input type="text" value="{{ ship_filter|default:max_status }}" />
+                                        </span> <span class="plural_value">{{ ship_filter|default:max_status|choose_plural:"день,дня,дней"  }}</span>
+                                    {% endifequal %}
+                                    <div id="filter_ship_slider"></div>
+                                </div>
+                                <script type="text/javascript">
+                                    {% ifequal ship_filter 0 %}
+                                        SetShipSlider({{ min_status }},{{ max_status }},{{ ship_filter }});
+                                    {% else %}
+                                        SetShipSlider({{ min_status }},{{ max_status }},{{ ship_filter|default:max_status }});
+                                    {% endifequal %}
+                                </script>
+                            </div>
 
-                {% if request.GET.price_filter or request.GET.mfr or request.GET.features %}
+                            {% if not additional_filter %}
+                                <div class="filter_submit"><a class="btn1 filter_submit_btn" href="{% get_request_parameters request.GET 'True' '' %}">Применить</a></div>
+                            {% endif %}
+                        </div>
+                        <div class="filter_pl_t"></div>
+                        <div class="filter_pl_b"></div>
+                    </div>
+
+                    {% if category.manufacturers %}
+                        <div class="filter">
+                            <div class="filter_h">Производители</div>
+                            <ul class="filter_brands">
+                                {% for item in category.manufacturers %}
+                                    <li{% if mfr == item.id %} class="curr"{% endif %}><a href="#" name="{{ item.id }}">{{ item.title }}</a></li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endif %}
+
+                    {{ feature_values }}
+                    {% if is_subcat %} {# если не подкатегория - линамические фильтры не выводим #}
+                        {% for parameter in filter_parameters %}
+                            {% if parameter.values %}
+                                <div class="filter">
+                                    <div class="filter_h">{{ parameter.title }}</div>
+                                    <ul class="filter_params" name="{{ parameter.id }}">
+                                        {% for value in parameter.values %}
+                                            <li {% if parameter.selected == value.value %}class="curr"{% endif %} ><a href="#">{{ value.value }}</a></li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
+                    {% comment %}<div class="filter_submit"><input class="btn1 filter_submit_btn" type="submit" value="Применить" /></div>{% endcomment %}
+
+                    {% if additional_filter %}
+                        <div class="filter_submit"><a class="btn1 filter_submit_btn" href="{% get_request_parameters request.GET 'True' '' %}">Применить</a></div>
+                        <div class="filters_b"></div>
+                    {% endif %}
+                </div><!--/filters-->
+
+
+                {% if request.GET.price_filter or request.GET.ship_filter or request.GET.mfr or request.GET.features %}
                     <div class="unfilter">
                         <a class="unfilter_btn" href="{{ request.path }}">Отменить</a>
-                        {% if not request.GET.features %}
-                            {% if request.GET.price_filter and not request.GET.mfr %}
-                                <p>Вы применили фильтр по «Цена»</p>
-                            {% endif %}
-                            {% if not request.GET.price_filter and request.GET.mfr %}
-                                <p>Вы применили фильтр по «Производители»</p>
-                            {% endif %}
-                            {% if request.GET.price_filter and request.GET.mfr %}
-                                <p>Вы применили фильтр по «Производители» и «Цена»</p>
-                            {% endif %}
+                        {% if selected_filter_parameters %}
+                            {% get_unfilter_text request.GET selected_filter_parameters %}
                         {% else %}
-                            {% if request.GET.price_filter and not request.GET.mfr %}
-                                <p>Вы применили фильтр по «Цена»{% if selected_filter_parameters %},
-                                        {% for item in selected_filter_parameters %}{% if forloop.last %} и {% else %}{% if not forloop.first %},{% endif %}{% endif %} «{{ item.title }}»{% endfor %}
-                                    {% endif %}
-                                </p>
-                            {% endif %}
-                            {% if not request.GET.price_filter and request.GET.mfr %}
-                                <p>Вы применили фильтр по «Производители»{% if selected_filter_parameters %},
-                                        {% for item in selected_filter_parameters %}{% if forloop.last %} и {% else %}{% if not forloop.first %},{% endif %}{% endif %} «{{ item.title }}»{% endfor %}
-                                    {% endif %}</p>
-                            {% endif %}
-                            {% if request.GET.price_filter and request.GET.mfr %}
-                                <p>Вы применили фильтр по «Производители» и «Цена»{% if selected_filter_parameters %},
-                                        {% for item in selected_filter_parameters %}{% if forloop.last %} и {% else %}{% if not forloop.first %},{% endif %}{% endif %} «{{ item.title }}»{% endfor %}
-                                    {% endif %}</p>
-                            {% endif %}
-                            {% if not request.GET.price_filter and not request.GET.mfr %}
-                                <p>Вы применили фильтр по
-                                    {% for item in selected_filter_parameters %}
-                                        {% if not forloop.first %}{% if forloop.last %}и{% else %},{% endif %}{% endif %} «{{ item.title }}»
-                                    {% endfor %}
-                                </p>
-                            {% endif %}
-
+                            {% get_unfilter_text request.GET '' %}
                         {% endif %}
+                    </div>
+                {% endif %}
 
-
+                {% if request.GET.view == 'list' %}
+                    <div class="sorts">
+                        <div class="sort_img col">
+                        </div>
+                        <div class="sort_name col">
+                            <p>Название</p>
+                            <a href="?title_sort=desc{% get_request_parameters request.GET 'False' 'title_sort,ship_sort,price_sort' %}" {% if request.GET.title_sort == 'desc' %}class="sort_curr"{% endif %}><span class="dot">А</span></a>
+                            <a href="?title_sort=asc{% get_request_parameters request.GET 'False' 'title_sort,ship_sort,price_sort' %}" {% if request.GET.title_sort == 'asc' %}class="sort_curr"{% endif %}><span class="dot">Я</span></a>
+                        </div>
+                        <div class="sort_delivery col">
+                            <p>Срок поставки</p>
+                            <a href="?ship_sort=desc{% get_request_parameters request.GET 'False' 'title_sort,ship_sort,price_sort' %}" {% if request.GET.ship_sort == 'desc' %}class="sort_curr"{% endif %}><span class="dot">долго</span></a>
+                            <a href="?ship_sort=asc{% get_request_parameters request.GET 'False' 'title_sort,ship_sort,price_sort' %}" {% if request.GET.ship_sort == 'asc' %}class="sort_curr"{% endif %}><span class="dot">быстро</span></a>
+                        </div>
+                        <div class="sort_price col">
+                            <p>Цена</p>
+                            <a href="?price_sort=desc{% get_request_parameters request.GET 'False' 'title_sort,ship_sort,price_sort' %}" {% if request.GET.price_sort == 'desc' %}class="sort_curr"{% endif %}><span class="dot">дорого</span></a>
+                            <a href="?price_sort=asc{% get_request_parameters request.GET 'False' 'title_sort,ship_sort,price_sort' %}" {% if request.GET.price_sort == 'asc' %}class="sort_curr"{% endif %}><span class="dot">дешево</span></a>
+                        </div>
                     </div>
                 {% endif %}
             {% endif %}
@@ -146,6 +177,13 @@
                          </div>
                          <div class="item_b">
                              <h3 class="item_name"><a href="{{ item.get_absolute_url }}">{{ item.category.title_singular|title }} {{ item.title }}</a></h3>
+                             {% if item.status %}
+                                 <div class="item_status item_wait">
+                                     {% if request.GET.view != 'list' %}Срок доставки{% endif %}{{ item.status }} {{ item.status|choose_plural:"день,дня,дней" }}
+                                 </div>
+                             {% else %}
+                                 <div class="item_status item_available">Есть в наличии</div>
+                             {% endif %}
                              <div class="item_price">{{ item.get_str_price }} <i class="r">руб.</i></div>
                          </div>
                     </div>
@@ -193,6 +231,11 @@
                  </div>
                  <div class="item_b">
                      <h3 class="item_name"><a href="{{ item.get_absolute_url }}">{{ item.category.title_singular|title }} {{ item.title }}</a></h3>
+                     {% if item.status %}
+                         <div class="item_status item_wait">Срок доставки {{ item.status }} {{ item.status|choose_plural:"день,дня,дней" }}</div>
+                     {% else %}
+                         <div class="item_status item_available">Есть в наличии</div>
+                     {% endif %}
                      <div class="item_price">{{ item.get_str_price }} <i class="r">руб.</i></div>
                  </div>
             </div>

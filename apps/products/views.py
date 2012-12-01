@@ -1,15 +1,12 @@
 # -*- coding: utf-8 -*-
-import os, md5
-from datetime import datetime, date, timedelta
-from django.http import Http404, HttpResponse, HttpResponseBadRequest, HttpResponseRedirect, HttpResponseForbidden
+from django.http import  HttpResponse, HttpResponseBadRequest, HttpResponseRedirect
 from django.template.loader import render_to_string
 from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Q, Max, Min
-from django.views.generic.simple import direct_to_template
 
-from django.views.generic import ListView, DetailView, DetailView, TemplateView, View
+from django.views.generic import ListView, DetailView, TemplateView, View
 
-from models import Category, Product, Action, FeatureNameCategory, FeatureGroup, FeatureValue, Manufacturer
+from models import Category, Product, Action, FeatureNameCategory, FeatureValue, Manufacturer
 from apps.orders.forms import OneClickByeForm
 
 class ShowCategory(TemplateView):
@@ -17,7 +14,7 @@ class ShowCategory(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(ShowCategory, self).get_context_data()
-
+        is_additional_filter = False
         try:
             sort = self.request.GET['sort']
         except:
@@ -31,9 +28,34 @@ class ShowCategory(TemplateView):
         except:
             price_filter = False
         try:
+            ship_filter = int(self.request.GET['ship_filter'])
+            ship_filter_exist = True
+        except:
+            ship_filter = False
+            ship_filter_exist = False
+        try:
             features = self.request.GET['features']
         except:
             features = False
+
+        # сортировка для списка
+        try:
+            view = self.request.GET['view']
+        except:
+            view = False
+        try:
+            title_sort = self.request.GET['title_sort']
+        except:
+            title_sort = False
+        try:
+            ship_sort = self.request.GET['ship_sort']
+        except:
+            ship_sort = False
+        try:
+            price_sort = self.request.GET['price_sort']
+        except:
+            price_sort = False
+
 
         slug = self.kwargs.get('slug', None)
         sub_slug = self.kwargs.get('sub_slug', None)
@@ -67,12 +89,20 @@ class ShowCategory(TemplateView):
             manufacturers = Manufacturer.objects.published().filter(id__in=products.values('manufacturer__id')).values(
                 'id', 'title')
             setattr(context['category'], 'manufacturers', manufacturers)
+            if manufacturers:
+                is_additional_filter = True
             dic = products.aggregate(Min('price'), Max('price'))
             context['max_price'] = dic['price__max']
             context['min_price'] = dic['price__min']
             if context['max_price'] == None:
                 context['max_price'] = 0
                 context['min_price'] = 0
+            dic2 = products.aggregate(Min('status'), Max('status'))
+            context['max_status'] = dic2['status__max']
+            context['min_status'] = dic2['status__min']
+            if context['max_status'] == None:
+                context['max_status'] = 0
+                context['min_status'] = 0
 
             filter_parameters_groops = category.get_all_feature_groups()
             filter_parameters_names = FeatureNameCategory.objects.published().filter(in_filter=True,
@@ -91,6 +121,9 @@ class ShowCategory(TemplateView):
                         except:
                             pass
                 setattr(name, 'values', values)
+                if values:
+                    is_additional_filter = True
+
 
             context['filter_parameters'] = filter_parameters_names
             context['selected_filter_parameters'] = filter_parameters_names.filter(id__in=selected_fn_ids)
@@ -103,6 +136,10 @@ class ShowCategory(TemplateView):
                 products = products.filter(price__lte=price_filter)
                 context['price_filter'] = price_filter
 
+            if ship_filter_exist:
+                products = products.filter(status__lte=ship_filter)
+                context['ship_filter'] = ship_filter
+
             if features:
                 all_feature_values = FeatureValue.objects.all().values('product__id').distinct()
                 result_feature_values = all_feature_values
@@ -111,6 +148,26 @@ class ShowCategory(TemplateView):
                     feature_values = all_feature_values.filter(feature_name__id=int(feature[0]), value__contains=feature[1]).values('product__id')
                     result_feature_values = result_feature_values.filter(product__id__in=feature_values)
                 products = products.filter(id__in=result_feature_values)
+
+            context['additional_filter'] = is_additional_filter
+
+            # применяю сортировку
+            if view and view=='list':
+                if title_sort:
+                    if title_sort == 'desc':
+                        products = products.order_by('title')
+                    elif title_sort == 'asc':
+                        products = products.order_by('-title')
+                if ship_sort:
+                    if ship_sort == 'desc':
+                        products = products.order_by('status')
+                    elif ship_sort == 'asc':
+                        products = products.order_by('-status')
+                if price_sort:
+                    if price_sort == 'desc':
+                        products = products.order_by('-price')
+                    elif price_sort == 'asc':
+                        products = products.order_by('price')
 
             context['catalog'] = products
         else:

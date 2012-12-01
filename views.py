@@ -199,6 +199,10 @@ def upload_xml(request):
                             product_xml_code = z.getAttribute('code')
                             product_ship = z.getAttribute('ship')
                             product_price = Decimal(z.getAttribute('price'))
+                            try:
+                                product_old_price = Decimal(z.getAttribute('old_price'))
+                            except:
+                                product_old_price = False
                             product_change_time = z.getAttribute('timestamp')
                             try:
                                 product_description = z.getElementsByTagName('description')[0].firstChild.nodeValue
@@ -248,6 +252,21 @@ def upload_xml(request):
                                     new_product = Product(title=product_title, description=product_description,
                                         price=product_price, status=product_ship, xml_code=product_xml_code,
                                         change_date=product_change_time)
+                                if product_old_price:
+                                    new_product.price_old = product_old_price
+
+                                # добавим данные об типе предложения
+                                flag_array = z.getElementsByTagName('flag')
+                                if flag_array:
+                                    for flag in flag_array:
+                                        flag_name = flag.getAttribute('name')
+                                        if flag_name == 'superprice':
+                                            new_product.is_discount = True
+                                        elif flag_name == 'hit':
+                                            new_product.is_hit = True
+                                        elif flag_name == 'new':
+                                            new_product.is_new = True
+
                                 new_product.save()
                             else:
                                 prod_category = False
@@ -273,9 +292,11 @@ def upload_xml(request):
                                                 #parameter_model_object = False
                                                 # создадим группу параметров и название параметра
                                                 if prod_category:
-                                                    new_param_group = FeatureGroup(category=prod_category, title=parameter_name_grp_title)
+                                                    new_param_group = FeatureGroup(category=prod_category,
+                                                        title=parameter_name_grp_title)
                                                     new_param_group.save()
-                                                    parameter_model_object = FeatureNameCategory(feature_group=new_param_group, title=parameter_name)
+                                                    parameter_model_object = FeatureNameCategory(
+                                                        feature_group=new_param_group, title=parameter_name)
                                                     parameter_model_object.save()
                                                 else:
                                                     parameter_model_object = False
@@ -283,7 +304,7 @@ def upload_xml(request):
                                                 new_parameter_value = FeatureValue(product=new_product,
                                                     feature_name=parameter_model_object, value=parameter_value)
                                                 new_parameter_value.save()
-                                # значения свойств
+                                    # значения свойств
                                 property_array = z.getElementsByTagName(
                                     'property')
                                 if property_array:
@@ -291,7 +312,7 @@ def upload_xml(request):
                                         property_value = property.firstChild.nodeValue
                                         new_property = ProductProperty(product=new_product, value=property_value)
                                         new_property.save()
-                                # изображения товара
+                                    # изображения товара
                                 img_array = z.getElementsByTagName('img')
                                 if img_array:
                                     for img in img_array:

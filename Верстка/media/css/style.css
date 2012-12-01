@@ -616,14 +616,20 @@ a.btn1:hover, a.btn2:hover {color: #fff;}
 .item {
 	font-size: 14px;
 	display: inline-block;
-	vertical-align: bottom;
+	vertical-align: top;
 	width: 150px;
 	padding: 0 10px 0 0;
-	margin: 0 0 36px 40px;
+	margin: 0 0 10px 40px;
 }
 .item_t {
 	position: relative;
 	margin: 0 0 12px 0;
+	height: 150px;
+}
+.item_t img {
+	position: absolute;
+	left: 0;
+	bottom: 0;
 }
 .item_b {
 	min-height: 68px;
@@ -679,6 +685,7 @@ a.btn1:hover, a.btn2:hover {color: #fff;}
 .items_listed .item {
 	display: block;
 	width: 565px;
+	margin-bottom: 36px;
 }
 .items_listed .item_t,
 .items_listed .item_b,
@@ -691,7 +698,12 @@ a.btn1:hover, a.btn2:hover {color: #fff;}
 }
 .items_listed .item_t {
 	width: 120px;
+	height: auto;
 }
+.items_listed .item_t img {
+	position: static;
+}
+
 .items_listed .item_b {
 	width: 440px;
 }

@@ -30,6 +30,13 @@
             {% endif %}
         </div>
 
+            <div class="cart_delivery col">
+                {% if cart_item.product.status %}
+                    <p>Срок доставки</p>
+                    <p class="cart_delivery_val"><strong>{{ cart_item.product.status }}</strong> {{ cart_item.product.status|choose_plural:"день,дня,дней" }}</p>
+                {% endif %}
+            </div>
+
         <div class="cart_qty">
             <p>Количество</p>
             <div><input class="btn2 cart_qty_btn" type="button" value="{{ cart_item.count }}" /></div>

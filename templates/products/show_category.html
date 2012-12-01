@@ -22,21 +22,10 @@
 {#            {% if is_subcat %}#}
                 <h1>{{ category.title }}</h1>
 {#            {% endif %}#}
-            <span>
-                {% if request.GET.sort %}
-                    {% if request.GET.sort == 'pasc' %}
-                        <a class="curr" href="?sort=pasc{% get_request_parameters request.GET 'False' 'sort' %}">сначала дорогие</a>
-                        <a href="?sort=pdesk{% get_request_parameters request.GET 'False' 'sort' %}">сначала дешёвые</a>
-                    {% endif %}
-                    {% if request.GET.sort == 'pdesk' %}
-                        <a href="?sort=pasc{% get_request_parameters request.GET 'False' 'sort' %}">сначала дорогие</a>
-                        <a class="curr" href="?sort=pdesk{% get_request_parameters request.GET 'False' 'sort' %}">сначала дешёвые</a>
-                    {% endif %}
-                {% else %}
-                    <a href="?sort=pasc{% get_request_parameters request.GET 'False' 'sort' %}">сначала дорогие</a>
-                    <a href="?sort=pdesk{% get_request_parameters request.GET 'False' 'sort' %}">сначала дешёвые</a>
-                {% endif %}
-            </span>
+            <ul>
+                <li class="catalog_mode_brick {% if not request.GET.view or request.GET.view != 'list' %}catalog_mode_brick_curr{% endif %}"><a href="?view=pic{% get_request_parameters request.GET 'False' 'view,price_sort,title_sort,ship_sort' %}"><span>картинки</span></a></li>
+                <li class="catalog_mode_line {% if request.GET.view == 'list' %}catalog_mode_brick_curr{% endif %}"><a href="?view=list{% get_request_parameters request.GET 'False' 'view' %}"><span>список</span></a></li>
+            </ul>
         </div>
 
         {% include 'products/products_list.html' %}
