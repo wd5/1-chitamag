@@ -195,7 +195,7 @@ class Product(models.Model):
         return self.title
 
     def get_absolute_url(self):
-        return reverse('show_product',kwargs={'pk': '%s'%self.id,'slug':'%s'%self.category.parent.slug,'sub_slug':'%s'%self.category.slug})
+        return reverse('show_product',kwargs={'pk': '%s'%self.xml_code,'slug':'%s'%self.category.parent.slug,'sub_slug':'%s'%self.category.slug})
 
     def get_str_price(self):
         return str_price(self.price)

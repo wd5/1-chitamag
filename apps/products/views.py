@@ -56,7 +56,6 @@ class ShowCategory(TemplateView):
         except:
             price_sort = False
 
-
         slug = self.kwargs.get('slug', None)
         sub_slug = self.kwargs.get('sub_slug', None)
         is_subcat = False
@@ -124,7 +123,6 @@ class ShowCategory(TemplateView):
                 if values:
                     is_additional_filter = True
 
-
             context['filter_parameters'] = filter_parameters_names
             context['selected_filter_parameters'] = filter_parameters_names.filter(id__in=selected_fn_ids)
 
@@ -145,14 +143,15 @@ class ShowCategory(TemplateView):
                 result_feature_values = all_feature_values
                 for features_item in features.split('|'):
                     feature = features_item.split('^')
-                    feature_values = all_feature_values.filter(feature_name__id=int(feature[0]), value__contains=feature[1]).values('product__id')
+                    feature_values = all_feature_values.filter(feature_name__id=int(feature[0]),
+                        value__contains=feature[1]).values('product__id')
                     result_feature_values = result_feature_values.filter(product__id__in=feature_values)
                 products = products.filter(id__in=result_feature_values)
 
             context['additional_filter'] = is_additional_filter
 
             # применяю сортировку
-            if view and view=='list':
+            if view and view == 'list':
                 if title_sort:
                     if title_sort == 'desc':
                         products = products.order_by('title')
@@ -176,13 +175,20 @@ class ShowCategory(TemplateView):
 
 show_category = ShowCategory.as_view()
 
-class ShowProduct(DetailView):
-    model = Product
-    context_object_name = 'product'
+class ShowProduct(TemplateView):
+#    model = Product
+#    context_object_name = 'product'
     template_name = 'products/show_product.html'
 
     def get_context_data(self, **kwargs):
         context = super(ShowProduct, self).get_context_data()
+
+        try:
+            pk = self.kwargs.get('pk', None)
+            self.object = Product.objects.get(xml_code=pk)
+            context['product'] = self.object
+        except:
+            return HttpResponseRedirect('/')
 
         # все указанные параметры товара
         product_features_values_set = self.object.get_feature_values()
@@ -230,9 +236,10 @@ class ShowProduct(DetailView):
             mfrer = '%s - ' % self.object.manufacturer.title
         except:
             mfrer = ''
-        one_clk_form = OneClickByeForm(initial={'product':self.object,
-        'product_description':u'%s%s %s' % (mfrer,self.object.category.title_singular,self.object.title),
-        'product_price':self.object.price})
+        one_clk_form = OneClickByeForm(initial={'product': self.object,
+                                                'product_description': u'%s%s %s' % (
+                                                    mfrer, self.object.category.title_singular, self.object.title),
+                                                'product_price': self.object.price})
         one_clk_form.fields['product'].queryset = product_qs
         context['one_clk_form'] = one_clk_form
         return context
@@ -249,7 +256,7 @@ class ProductsSearch(TemplateView):
             q = self.request.GET['q']
         except:
             q = ''
-        if q=='':
+        if q == '':
             q = '?'
         qs = products.filter(
             Q(title__icontains=q) |
