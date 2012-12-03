@@ -80,7 +80,7 @@ class ProductAdmin(AdminImageMixin, admin.ModelAdmin):
     search_fields = ('title', 'price','xml_code',)
 #    filter_horizontal = ('related_products',)
     raw_id_fields = ('related_products',)
-    exclude = ('xml_code',)
+    readonly_fields = ('xml_code',)
     inlines = [ProductImageInline, ProductPropertyInline, FeatureValueInline, ]
     form = ProductAdminForm
     #custom_filter_spec = {'category': Category.objects.exclude(parent=None)}
