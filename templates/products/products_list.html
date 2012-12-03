@@ -7,8 +7,8 @@
                     <div class="item">
                          <div class="item_t">
                              <a href="{{ item.get_absolute_url }}">
-                                 {% thumbnail item.image "116" crop="center" as im %}
-                                    <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="{{ item.title }}" />
+                                 {% thumbnail item.image "116x116" as im %}
+                                    <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="{{ item.title }}" style="margin:{{ im|margin:"116x116" }}" />
                                  {% endthumbnail %}
                              </a>
                              {% if item.is_hit or item.is_new or item.is_discount %}
@@ -157,8 +157,8 @@
                     <div class="item">
                          <div class="item_t">
                              <a href="{{ item.get_absolute_url }}">
-                                 {% thumbnail item.image "116" crop="center" as im %}
-                                    <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="{{ item.title }}" />
+                                 {% thumbnail item.image "116x116" as im %}
+                                    <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" style="margin:{{ im|margin:"116x116" }}" alt="{{ item.title }}" />
                                  {% endthumbnail %}
                              </a>
                              {% if item.is_hit or item.is_new or item.is_discount %}
@@ -211,8 +211,8 @@
             <div class="item">
                  <div class="item_t">
                      <a href="{{ item.get_absolute_url }}">
-                         {% thumbnail item.image "116" crop="center" as im %}
-                            <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="{{ item.title }}" />
+                         {% thumbnail item.image "116x116" crop="center" as im %}
+                            <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" style="margin:{{ im|margin:"116x116" }}" alt="{{ item.title }}" />
                          {% endthumbnail %}
                      </a>
                      {% if item.is_hit or item.is_new or item.is_discount %}
