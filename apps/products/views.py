@@ -159,9 +159,9 @@ class ShowCategory(TemplateView):
                         products = products.order_by('-title')
                 if ship_sort:
                     if ship_sort == 'desc':
-                        products = products.order_by('status')
-                    elif ship_sort == 'asc':
                         products = products.order_by('-status')
+                    elif ship_sort == 'asc':
+                        products = products.order_by('status')
                 if price_sort:
                     if price_sort == 'desc':
                         products = products.order_by('-price')
