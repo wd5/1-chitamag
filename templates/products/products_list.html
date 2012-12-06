@@ -7,7 +7,7 @@
                     <div class="item">
                          <div class="item_t">
                              <a href="{{ item.get_absolute_url }}">
-                                 {% thumbnail item.image "116" as im %}
+                                 {% thumbnail item.image "150x150" as im %}
                                     <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="{{ item.title }}" />
 {#                                     {# style="margin:{{ im|margin:"116x116" }}" #}#}
                                  {% endthumbnail %}
@@ -158,7 +158,7 @@
                     <div class="item">
                          <div class="item_t">
                              <a href="{{ item.get_absolute_url }}">
-                                 {% thumbnail item.image "116" as im %}
+                                 {% thumbnail item.image "150x150" as im %}
                                     <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" {# style="margin:{{ im|margin:"116x116" }}" #} alt="{{ item.title }}" />
                                  {% endthumbnail %}
                              </a>
@@ -212,7 +212,7 @@
             <div class="item">
                  <div class="item_t">
                      <a href="{{ item.get_absolute_url }}">
-                         {% thumbnail item.image "116" as im %}
+                         {% thumbnail item.image "150x150" as im %}
                             <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" {# style="margin:{{ im|margin:"116x116" }}" #} alt="{{ item.title }}" />
                          {% endthumbnail %}
                      </a>
