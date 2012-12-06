@@ -46,8 +46,8 @@
                             <div class="oldprice"><span>{{ discount_product.get_str_price_old }} руб.</span></div>
                             <div class="item_price">{{ discount_product.get_str_price }} <i class="r">руб.</i></div>
                             <div class="promo_3_img">
-                                {% thumbnail discount_product.image "116x116" as im %}
-                                    <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" style="margin:{{ im|margin:"116x116" }}"/>
+                                {% thumbnail discount_product.image "116" as im %}
+                                    <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" {# style="margin:{{ im|margin:"116x116" }}" #}/>
                                 {% endthumbnail %}
                             </div>
                         </a>
@@ -68,8 +68,8 @@
                             <div class="oldprice"><span>{{ small_discount.get_str_price_old }} руб.</span></div>
                             <div class="item_price">{{ small_discount.get_str_price }} <i class="r">руб.</i></div>
                             <div class="promo_3_img">
-                                {% thumbnail small_discount.image "116x116" as im %}
-                                    <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" style="margin:{{ im|margin:"116x116" }}"/>
+                                {% thumbnail small_discount.image "116" as im %}
+                                    <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" {# style="margin:{{ im|margin:"116x116" }}" #}/>
                                 {% endthumbnail %}
                             </div>
                         </a>
