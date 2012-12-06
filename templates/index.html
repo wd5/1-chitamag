@@ -30,7 +30,7 @@
                         </div>
                         <div class="promo_1_r col">
                             {% thumbnail product.image "185x134" as im %}
-                                <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}"/>
+                                <img src="{{ im.url }}" width="{{ im.width }}" style="margin:{{ im|margin:"185x134" }}" height="{{ im.height }}"/>
                             {% endthumbnail %}
                             <div class="item_price">{{ product.get_str_price }} <i class="r">руб.</i></div>
                         </div>
@@ -47,7 +47,7 @@
                             <div class="item_price">{{ discount_product.get_str_price }} <i class="r">руб.</i></div>
                             <div class="promo_3_img">
                                 {% thumbnail discount_product.image "116" as im %}
-                                    <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" {# style="margin:{{ im|margin:"116x116" }}" #}/>
+                                    <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" style="margin:{{ im|margin:"116x116" }}"/>
                                 {% endthumbnail %}
                             </div>
                         </a>
