@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% load thumbnail siteblocks_extras products_extras %}
+
+{% comment %}{% if page.title %}
+    {% block title %}
+        {{ page.title }} &mdash;
+    {% endblock %}
+{% endif %}{% endcomment %}
+
+{% block extended_js %}
+    <script src="http://api-maps.yandex.ru/2.0/?load=package.full&mode=debug&lang=ru-RU" type="text/javascript"></script>
+    <script type="text/javascript">
+    $(function(){
+
+        ymaps.ready(function () {
+            {% if contacts_coords %}
+                var map = new ymaps.Map("contacts_map",
+                    {
+                        center: [{{ contacts_coords }}],
+                        zoom: 17,
+                        type: "yandex#publicMap"
+                    }
+                );
+
+                map.controls.add("zoomControl");
+
+
+                var placemark = new ymaps.Placemark(
+                    [{{ contacts_coords }}]
+                );
+                map.geoObjects.add(placemark);
+
+            {% endif %}
+
+        });
+    });
+    </script>
+{% endblock %}
+
+{% block main %}
+    {% block_catalog_menu '' %}
+
+    <div class="right col">
+        <div class="h_menu">
+            <ul>
+                <li class="curr"><a href="/contacts/">Контакты</a></li>
+                <li><a href="/service_and_warranty/">Сервис и гарантии</a></li>
+                <li><a href="/carting_and_payment/">Доставка и оплата</a></li>
+            </ul>
+        </div>
+
+        <div class="contacts_page">
+            {{ page.content|safe }}
+            {% comment %}<div class="text">
+                <h3>О нас</h3>
+                <p>Цифровая техника, бытовая техника, мобильные телефоны, ноутбуки, компьютеры всегда в большом ассортименте. Ассортимент товара постоянно пополняется. Ежедневные акции!</p>
+                <h3>Адрес офиса и точки самовывоза</h3>
+            </div>
+            <div class="contacts_l col">
+                <div class="contacts_map">код карты</div>
+            </div>
+            <div class="contacts_r col">
+                <div class="contacts_address">
+                    Чита, ул. Ленина, д. 63 <em>офис 11</em>
+                </div>
+                <div class="contacts_tel">
+                +7 (3022) <strong>400-417</strong>
+                </div>
+            </div>{% endcomment %}
+        </div><!--/service-->
+
+    </div><!--/text_final-->
+{% endblock %}

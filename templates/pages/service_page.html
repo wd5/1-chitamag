@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% load thumbnail siteblocks_extras products_extras %}
+
+{% comment %}{% if page.title %}
+    {% block title %}
+        {{ page.title }} &mdash;
+    {% endblock %}
+{% endif %}{% endcomment %}
+
+{% block main %}
+    {% block_catalog_menu '' %}
+
+    <div class="right col">
+        <div class="h_menu">
+            <ul>
+                <li class="curr"><a href="/service_and_warranty/">Сервис и гарантии</a></li>
+                <li><a href="/carting_and_payment/">Доставка и оплата</a></li>
+                <li><a href="/contacts/">Контакты</a></li>
+            </ul>
+        </div>
+
+        <div class="service">
+            <div class="text">
+                <h1>Сервис и гарантии</h1>
+                {{ page.content|safe }}
+            </div>
+        </div><!--/sales-->
+    </div><!--/text_final-->
+{% endblock %}
