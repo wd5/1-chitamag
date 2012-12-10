@@ -34,7 +34,8 @@
 .items_listed .item_name,
 .items_listed .item_price,
 .items_listed .item_status,
-.page_h h1, .page_h ul, .page_h li {
+.page_h h1, .page_h ul, .page_h li,
+.h_menu li {
 	*display:inline;
 	*zoom:1;
 }

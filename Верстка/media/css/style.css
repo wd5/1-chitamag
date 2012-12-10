@@ -350,7 +350,7 @@ a.btn1:hover, a.btn2:hover {color: #fff;}
 .promos {
 	height: 414px;
 	margin: 0 0 72px 0;
-	width: 755px;
+	width: 754px;
 	position: relative;
 	border: 2px dashed #f9f0d6;
 	border-bottom: none;
@@ -365,15 +365,14 @@ a.btn1:hover, a.btn2:hover {color: #fff;}
 	color: #000;
 }
 
-.promo_1 {
-    display: none;
-}
-
 .curr_slide {
     display: block;
 }
 
-.promo_1, .promo_2, .promo_3, .promo_4, .promo_5 {
+.promo_1 {
+	position: absolute;
+}
+.promo_2, .promo_3, .promo_4, .promo_5 {
 	overflow: hidden;
 	position: absolute;
 }
@@ -394,15 +393,21 @@ a.btn1:hover, a.btn2:hover {color: #fff;}
 	top: 0;
 	left: 0;
 }
+.promo_item_name {
+	font-size: 24px;
+	line-height: 30px;
+}
 .promo_1_l {
 	font-size: 14px;
 	line-height: 18px;
+	width: 320px;
 }
 .promo_1 .main_param_val {
 	width: 116px;
 }
 .promo_1_r {
 	text-align: center;
+	width: 198px;
 }
 .promo_1 .item_price {
 	font-size: 36px;
@@ -427,79 +432,53 @@ a.btn1:hover, a.btn2:hover {color: #fff;}
 }
 .promo_arr_l {
 	background: url('../img/promo_arr_l.png') no-repeat;
-	left: -38px;
+	left: -44px;
 }
 .promo_arr_r {
 	background: url('../img/promo_arr_r.png') no-repeat;
-	left: 514px;
+	left: 522px;
 }
 
-.promo_2 {
-	width: 198px;
+.promo_2, .promo_3 {
+	border-bottom: 2px dashed #f9f0d6;
+	width: 197px;
 	height: 126px;
-	border-bottom: 2px dashed #f9f0d6;
+	left: 557px;
+}
+.promo_2 {
 	top: 0;
-	left: 557px;
 }
-
 .promo_3 {
-	width: 166px;
-	height: 104px;
-	border-bottom: 2px dashed #f9f0d6;
 	top: 128px;
-	left: 557px;
-	padding: 10px 16px 12px 16px;
 }
-.promo_3 h2 {
+.promo_2 a, .promo_3 a {
+	height: 126px;
+	text-align: center;
+}
+.promo_h {
 	font-size: 18px;
-	line-height: 24px;
-	margin-bottom: 0;
+	line-height: 54px;
+	font-weight: bold;
 }
-.promo_3 .oldprice {
-	font-size: 13px;
-	margin-bottom: 0;
+.promo_2 a {
+	background: url('../img/promo_delivery.png') no-repeat 0 100%;
 }
-.promo_3 .item_price {
-	font-size: 18px;
-}
-.promo_3_img {
-	position: absolute;
-	top: 74px;
-	left: 124px;
+.promo_3 a {
+	background: url('../img/promo_service.png') no-repeat center 100%;
 }
 
-.promo_4 {
-	width: 345px;
-	height: 134px;
-	border-right: 2px dashed #f9f0d6;
-	border-bottom: 2px dashed #f9f0d6;
-	top: 257px;
-	left: 0px;
-	padding: 12px 16px 12px 16px;
-}
-.promo_4_l, .promo_4_r {
-	display: inline-block;
-	vertical-align: bottom;
-}
-.promo_4_l {
-	width: 130px;
-}
-.promo_4_r {
-	line-height: 18px;
-	font-size: 14px;
-	width: 190px;
-}
-.promo_4_r h2 {
-	font-size: 24px;
-	line-height: 30px;
-	margin-bottom: 6px;
-}
-.promo_5 {
+.promo_4, .promo_5 {
 	width: 376px;
 	height: 158px;
 	border-bottom: 2px dashed #f9f0d6;
 	top: 257px;
-	left: 379px;
+}
+.promo_4 {
+	border-right: 2px dashed #f9f0d6;
+	left: 0px;
+}
+.promo_5 {
+	left: 378px;
 }
 /*/promos*/
 
@@ -697,8 +676,9 @@ a.btn1:hover, a.btn2:hover {color: #fff;}
 	margin: 0;
 }
 .items_listed .item_t {
-	width: 120px;
-	height: auto;
+	/*width: 120px;
+	height: auto;*/
+	margin-left: -30px;
 }
 .items_listed .item_t img {
 	position: static;
@@ -1656,6 +1636,83 @@ a.btn1:hover, a.btn2:hover {color: #fff;}
 
 
 
+/*service*/
+.service {
+	padding-left: 200px;
+}
+.h_menu {
+	margin: 0 0 24px 40px;
+}
+.h_menu li {
+	display: inline-block;
+	vertical-align: middle;
+	margin: 0 40px 0 0;
+	line-height: 30px;
+}
+.h_menu .curr a {
+	font-size: 24px;
+	font-weight: bold;
+	color: #000;
+	text-decoration: none;
+}
+.pl {
+	background: #f9f0d6;
+	color: #543f02;
+	border-radius: 3px;
+	padding: 12px 12px 1px 12px;
+	margin: 0 0 12px -12px;
+}
+.img_side {
+	float: left;
+	margin: -12px 0 0 -160px;
+}
+.img_side_block {
+	float: left;
+	width: 160px;
+	text-align: center;
+	margin: 0 0 0 -160px;
+}
+.deliveries {
+	margin-bottom: 54px;
+}
+.delivery, .pay {
+	margin: 0 0 36px 0;
+}
+.pays h2 {
+	font-size: 24px;
+	line-height: 30px;
+}
+.contacts_page {
+	margin-left: 40px;
+}
+
+.contacts_l {
+	width: 520px;
+	margin-right: 36px;
+}
+.contacts_r {
+	width: 150px;
+}
+.contacts_map {
+	background: #f9f9f9;
+	width: 520px;
+	height: 360px;
+}
+.contacts_address, .contacts_tel {
+	padding: 30px 0 0 0;
+	margin: 0 0 24px 0;
+}
+.contacts_address {
+	background: url('../img/contacts_marker.png') no-repeat;
+}
+.contacts_tel {
+	background: url('../img/contacts_tel.png') no-repeat;
+}
+/*/service*/
+
+
+
+
 /*auth*/
 .auth_form {
 	width: 480px;
@@ -1844,6 +1901,14 @@ a.btn1:hover, a.btn2:hover {color: #fff;}
 	margin-bottom:18px;
 	font-size:14px;
 	border-collapse: collapse;
+}
+.text h1 {
+	font-size: 24px;
+	line-height: 30px;
+	margin-bottom: 18px;
+}
+.text h3 {
+	font-size: 16px;
 }
 .text tr, .text td, .text th {
 	border:1px solid #eee2ba;
