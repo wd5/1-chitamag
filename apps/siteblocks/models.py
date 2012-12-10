@@ -2,9 +2,8 @@
 from django.utils.translation import ugettext_lazy as _
 from django.db import models
 from apps.utils.managers import PublishedManager
-import os, datetime
+import os
 from pytils.translit import translify
-from sorl.thumbnail import ImageField
 from sorl.thumbnail import get_thumbnail
 
 
@@ -50,7 +49,7 @@ class Banner(models.Model):
     image = models.FileField(upload_to=file_path_banners, verbose_name = u'картинка',)
     link = models.URLField(u'ссылка')
     is_target_blank = models.BooleanField(u'открывать на новой странице',)
-    size = models.CharField(u'размер', choices=size_choices, max_length=20)
+    size = models.CharField(u'размер', choices=size_choices, max_length=20, default=u'big', editable=False)
     order = models.IntegerField(verbose_name=u'Порядок сортировки',default=10)
     is_published = models.BooleanField(verbose_name = u'Опубликовано', default=True)
 

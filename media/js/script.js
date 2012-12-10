@@ -216,7 +216,7 @@ $(function(){
 
     function SlideToLeft()
     {
-        var curr_slide = $('div.curr_slide')
+        var curr_slide = $('li.curr_slide')
         if (curr_slide.prev().html())
             {
                 curr_slide.toggleClass('curr_slide');
@@ -231,7 +231,7 @@ $(function(){
 
     function SlideToRight()
     {
-        var curr_slide = $('div.curr_slide')
+        var curr_slide = $('li.curr_slide')
         if (curr_slide.next().html())
             {
                 curr_slide.toggleClass('curr_slide');
@@ -248,7 +248,7 @@ $(function(){
 
     function SlidePromos(){
        clearInterval(myTimer);
-       myTimer = setInterval( function(){SlideToRight();} , 7000)
+       myTimer = setInterval( function(){SlideToRight();} , 7000);
        myTimer;
     }
 

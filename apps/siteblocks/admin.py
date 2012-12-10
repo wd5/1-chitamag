@@ -2,9 +2,7 @@
 from django.contrib import admin
 from django import forms
 from apps.siteblocks.models import Settings, Banner
-from apps.utils.widgets import RedactorMini
 from sorl.thumbnail.admin import AdminImageMixin
-from mptt.admin import MPTTModelAdmin
 from apps.utils.widgets import Redactor
 
 #--Виджеты jquery Редактора
@@ -30,6 +28,8 @@ class SettingsAdminForm(forms.ModelForm):
 
 class SettingsAdmin(admin.ModelAdmin):
     list_display = ('title','name','value',)
+    fields = ('title','value',)
+
     form = SettingsAdminForm
 admin.site.register(Settings, SettingsAdmin)
 

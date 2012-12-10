@@ -2,18 +2,18 @@
 
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
-from django.views.decorators.csrf import csrf_exempt,csrf_protect
+from django.views.decorators.csrf import csrf_exempt, csrf_protect
 from django.views.generic.simple import direct_to_template
 from apps.pages.models import Page
 from apps.siteblocks.models import Settings
-import settings
 
 def index(request):
     try:
-        page = Page.objects.get(url = 'index')
+        page = Page.objects.get(url='index')
     except Page.DoesNotExist:
         page = False
     return direct_to_template(request, 'pages/index.html', locals())
+
 
 @csrf_protect
 def page(request, url):
@@ -37,8 +37,13 @@ def page(request, url):
         else:
             page = get_object_or_404(page.get_children(), url__exact="/" + item + "/")
 
-    #page = get_object_or_404(Page, url__exact=url)
-    return direct_to_template(request, 'pages/default.html', locals())
+    try:
+        contacts_coords = Settings.objects.get(name='contacts_coords').value
+    except:
+        contacts_coords = False
+        #page = get_object_or_404(Page, url__exact=url)
+    return direct_to_template(request, page.template, locals())
+
 
 @csrf_exempt
 def static_page(request, template):

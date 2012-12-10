@@ -2,10 +2,8 @@
 from django.utils.translation import ugettext_lazy as _
 import os
 from django.db import models
-from sorl.thumbnail.fields import ImageField
 
 from apps.utils.models import BaseDoc, BasePic
-from apps.utils.managers import PublishedManager
 from mptt.models import MPTTModel, TreeForeignKey, TreeManager
 
 class Page(MPTTModel):
@@ -19,6 +17,7 @@ class Page(MPTTModel):
     is_published = models.BooleanField(verbose_name=u'Опубликовано', default = True)
     is_at_menu = models.BooleanField(verbose_name=u'Отображать в меню', default = False)
     is_at_footer_menu = models.BooleanField(verbose_name=u'Отображать в нижнем меню', default = False)
+    template = models.CharField(verbose_name=u'шаблон', max_length=100, editable=False, default=u'pages/default.html')
 
     objects = TreeManager()
 

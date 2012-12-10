@@ -21,7 +21,7 @@ class Command(BaseCommand):
 
 
 class TestView(TemplateView):
-    template_name = 'index.html'
+    template_name = 'parse_test.html'
 
     def get_context_data(self, **kwargs):
         context = super(TestView, self).get_context_data(**kwargs)

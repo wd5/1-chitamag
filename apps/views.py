@@ -17,14 +17,14 @@ class IndexView(TemplateView):
         discount_products = discount_products.order_by('?')
         big_banners = all_banners.filter(size='big').order_by('?')[:2]
         small_banners = all_banners.filter(size='small').order_by('?')[:1]
-        if small_banners.count() == 1:
-            context['small_banner'] = small_banners[0]
-            try:
-                context['small_discount'] = discount_products[:1][0]
-            except:
-                context['small_discount'] = False
-        elif small_banners.count() == 0:
-            context['small_discounts'] = discount_products[:2]
+#        if small_banners.count() == 1:
+#            context['small_banner'] = small_banners[0]
+#            try:
+#                context['small_discount'] = discount_products[:1][0]
+#            except:
+#                context['small_discount'] = False
+#        elif small_banners.count() == 0:
+#            context['small_discounts'] = discount_products[:2]
 
         context['big_banners'] = big_banners
         context['slider_products'] = slider_products
