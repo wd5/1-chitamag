@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% load thumbnail products_extras %}
+
+{% comment %}
+{% block title %}
+    Главная &mdash;
+{% endblock %}
+{% endcomment %}
+
+{% block main %}
+    {% block_catalog_menu '' %}
+    <div class="right col">
+        {{ parse_info }}
+    </div><!--/right-->
+{% endblock %}
+
