@@ -196,33 +196,40 @@ class ShowProduct(TemplateView):
         # группа с основными параметрами
         base_features_values = []
         base_feature_group = self.object.category.get_base_feature_group()
-        for name in base_feature_group.get_feature_names():
-            try:
-                value = product_features_values_set.get(feature_name=name)
-                base_features_values.append({'title': name.title, 'value': value})
-            except:
-                value = False
-        setattr(base_feature_group, 'features_values', base_features_values)
+        try:
+            for name in base_feature_group.get_feature_names():
+                try:
+                    value = product_features_values_set.get(feature_name=name)
+                    base_features_values.append({'title': name.title, 'value': value})
+                except:
+                    value = False
+            setattr(base_feature_group, 'features_values', base_features_values)
+        except:
+            pass
         if base_features_values:
             context['base_feature_group'] = base_feature_group
         else:
             context['base_feature_group'] = False
 
-        base_feature_group = self.object.category.get_base_feature_group()
+        #base_feature_group = self.object.category.get_base_feature_group()
 
         # группа с НЕосновными параметрами
         exists = False
-        other_feature_groups = self.object.category.get_other_feature_groups()
-        for gpoup in other_feature_groups:
-            other_features_values = []
-            for name in gpoup.get_feature_names():
-                try:
-                    value = product_features_values_set.get(feature_name=name)
-                    exists = True
-                    other_features_values.append({'title': name.title, 'value': value})
-                except:
-                    value = False
-            setattr(gpoup, 'features_values', other_features_values)
+        try:
+            other_feature_groups = self.object.category.get_other_feature_groups()
+            for group in other_feature_groups:
+                other_features_values = []
+                for name in group.get_feature_names():
+                    try:
+                        value = product_features_values_set.get(feature_name=name)
+                        exists = True
+                        other_features_values.append({'title': name.title, 'value': value})
+                    except:
+                        value = False
+                setattr(group, 'features_values', other_features_values)
+        except:
+            other_feature_groups = []
+
         if exists:
             context['other_feature_groups'] = other_feature_groups
         else:
