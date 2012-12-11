@@ -7,7 +7,8 @@
                     <div class="catalog_menu_1{% if item.id == parent_id %} curr{% endif %}"><a href="{{ item.get_absolute_url }}">{{ item.title }}</a></div>
 
                     {% if item.id == parent_id %}
-                        {% if item.get_children %}
+{#                        {% if item.get_children %}#}
+                        {% if item.get_children and not item.get_products_in_categ %}
                             <ul class="catalog_submenu">
                                 {% for child in item.get_children %}
                                     {% if child.is_published %}

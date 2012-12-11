@@ -66,12 +66,12 @@ class ShowCategory(TemplateView):
                 category = False
         else:
             try:
-                category = Category.objects.get(slug=sub_slug)
+                category = Category.objects.filter(parent__slug=slug).get(slug=sub_slug)
                 is_subcat = True
             except:
                 is_subcat = False
                 try:
-                    category = Category.objects.get(slug=slug)
+                    category = Category.objects.filter(parent__slug=slug).get(slug=slug)
                 except:
                     category = False
         if category:

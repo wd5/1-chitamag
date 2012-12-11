@@ -91,7 +91,8 @@ class Category(MPTTModel):
 
     def get_products(self):
         products_ids = []
-        if self.parent == None:
+        #if self.parent == None:
+        if self.parent == None and not self.product_set.published(): # если категория первого уровня и к ней не прикреплены товары - то вытаскиваем товары из дочерних ватегорий
             products = Product.objects.published()
             for child in self.get_children():
                 for product in child.product_set.published():
@@ -100,6 +101,9 @@ class Category(MPTTModel):
             return products
         else:
             return self.product_set.published()
+
+    def get_products_in_categ(self):
+        return self.product_set.published()
 
     def get_feature_names(self):
         name_set = FeatureNameCategory.objects.published().filter(feature_group__category__id=self.id)
@@ -209,8 +213,11 @@ class Product(models.Model):
         return self.title
 
     def get_absolute_url(self):
-        return reverse('show_product', kwargs={'pk': '%s' % self.xml_code, 'slug': '%s' % self.category.parent.slug,
+        if self.category.parent:
+            return reverse('show_product', kwargs={'pk': '%s' % self.xml_code, 'slug': '%s' % self.category.parent.slug,
                                                'sub_slug': '%s' % self.category.slug})
+        else:
+            return reverse('show_product', kwargs={'pk': '%s' % self.xml_code, 'slug': '%s' % self.category.slug, 'sub_slug': '%s' % '___'})
 
     def get_str_price(self):
         return str_price(self.price)

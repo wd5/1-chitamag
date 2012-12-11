@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% load thumbnail products_extras %}
+{% load thumbnail products_extras pytils_numeral %}
 
 {% comment %}
 {% block title %}
@@ -10,90 +10,55 @@
 
 {% block main %}
     {% block_catalog_menu '' %}
-    <div class="right col">{{ parse_info }}
+    <div class="right col">
         <div class="promos">
-            <div class="slider">
-            {% for product in slider_products %}
-                <div class="promo_1{% if forloop.first %} curr_slide{% endif %}">
-                    <a class="promo_a" href="{{ product.get_absolute_url }}">
-                        <div class="promo_1_l col">
-                            <h2 class="promo_item_name">{{ product.title }}</h2>
-                            <div class="main_params">
-                                <h3>{{ product.category.get_base_feature_group.title }}</h3>
-                                {% for feature_value in product.get_base_feature_values %}
-                                    <div class="main_param">
-                                        <div class="main_param_name"><span>{{ feature_value.feature_name.title }}</span></div>
-                                        <div class="main_param_val">{{ feature_value.value }}</div>
-                                    </div>
-                                {% endfor %}
-                            </div>
-                        </div>
-                        <div class="promo_1_r col">
-                            {% thumbnail product.image "185x134" as im %}
-                                <img src="{{ im.url }}" width="{{ im.width }}" style="margin:{{ im|margin:"185x134" }}" height="{{ im.height }}"/>
-                            {% endthumbnail %}
-                            <div class="item_price">{{ product.get_str_price }} <i class="r">руб.</i></div>
-                        </div>
-                    </a>
+                <div class="promo_1">
+                    <ul class="slider">
+                        {% for product in slider_products %}
+                            <li {% if forloop.first %}class="curr_slide"{% endif %}><a class="promo_a" href="#">
+                               <div class="promo_1_l col">
+                                   <h2 class="promo_item_name">{{ product.title }}</h2>
+                                   {% if item.status %}
+                                        <div class="item_status item_wait">Срок доставки: {{ item.status }} {{ item.status|choose_plural:"день,дня,дней" }}</div>
+                                    {% else %}
+                                        <div class="item_status item_available">Есть в наличии</div>
+                                    {% endif %}
+                                   <div class="main_params">
+                                       {% for feature_value in product.get_base_feature_values %}
+                                           <div class="main_param">
+                                               <div class="main_param_name"><span>{{ feature_value.feature_name.title }}</span></div>
+                                               <div class="main_param_val">{{ feature_value.value }}</div>
+                                           </div>
+                                       {% endfor %}
+                                   </div>
+                               </div>
+                               <div class="promo_1_r col">
+                                   {% thumbnail product.image "185x134" as im %}
+                                       <img src="{{ im.url }}" width="{{ im.width }}" style="margin:{{ im|margin:"185x134" }}" height="{{ im.height }}"/>
+                                   {% endthumbnail %}
+                                   <div class="item_price">{{ product.get_str_price }} <i class="r">руб.</i></div>
+                               </div>
+                            </a></li>
+                        {% endfor %}
+                    </ul>
                 </div>
-            {% endfor %}
-            </div>
-            {% if small_discounts %}
-                {% for discount_product in small_discounts %}
-                    <div class="{% cycle 'promo_2' 'promo_3' %}">
-                        <a class="promo_a" href="{{ discount_product.get_absolute_url }}">
-                            <h2>{{ discount_product.title }}</h2>
-                            <div class="oldprice"><span>{{ discount_product.get_str_price_old }} руб.</span></div>
-                            <div class="item_price">{{ discount_product.get_str_price }} <i class="r">руб.</i></div>
-                            <div class="promo_3_img">
-                                {% thumbnail discount_product.image "150x150" as im %}
-                                    <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" style="margin:{{ im|margin:"116x116" }}"/>
-                                {% endthumbnail %}
-                            </div>
-                        </a>
-                    </div>
-                {% endfor %}
-            {% else %}
-                <div class="promo_2">
-                    <a class="promo_a" {% if small_banner.is_target_blank %}target="_blank"{% endif %} href="{{ small_banner.link }}">
-                    {% thumbnail small_banner.image "198x126" crop="center" as im %}
-                        <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="" />
-                    {% endthumbnail %}
-                    </a>
-                </div>
-                {% if small_discount %}
-                    <div class="promo_3">
-                        <a class="promo_a" href="{{ small_discount.get_absolute_url }}">
-                            <h2>{{ small_discount.title }}</h2>
-                            <div class="oldprice"><span>{{ small_discount.get_str_price_old }} руб.</span></div>
-                            <div class="item_price">{{ small_discount.get_str_price }} <i class="r">руб.</i></div>
-                            <div class="promo_3_img">
-                                {% thumbnail small_discount.image "150x150" as im %}
-                                    <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" {# style="margin:{{ im|margin:"116x116" }}" #}/>
-                                {% endthumbnail %}
-                            </div>
-                        </a>
-                    </div>
-                {% endif %}
-            {% endif %}
 
-{% comment %}            <div class="promo_2">
-                <a class="promo_a" href="#"><img src="/media/images/promo2.jpg" alt="" /></a>
+            <div class="promo_2">
+                <a class="promo_a" href="/carting_and_payment/">
+                    <span class="promo_h">Доставка и оплата</span>
+                </a>
             </div>
 
             <div class="promo_3">
-                <a class="promo_a" href="#">
-                    <h2>Видеокамера Panasonic HC-X800</h2>
-                    <div class="oldprice"><span>36 500 руб.</span></div>
-                    <div class="item_price">900 <i class="r">руб.</i></div>
-                    <div class="promo_3_img"><img src="/media/images/item5.jpg" alt="" /></div>
+                <a class="promo_a" href="/service_and_warranty/">
+                    <span class="promo_h">Сервис и гарантии</span>
                 </a>
-            </div>{% endcomment %}
+            </div>
 
             {% if big_banners %}
                 {% for banner in big_banners %}
                     <div class="{% cycle 'promo_4' 'promo_5' %}">
-                        {% thumbnail banner.image "377x157" crop="center" as im %}
+                        {% thumbnail banner.image "376x158" crop="center" as im %}
                             <a class="promo_a" {% if banner.is_target_blank %}target="_blank"{% endif %} href="{{ banner.link }}"><img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="" /></a>
                         {% endthumbnail %}
                     </div>
@@ -102,17 +67,6 @@
 
             <a class="promo_arr_l" href="#"></a>
             <a class="promo_arr_r" href="#"></a>
-
-            {% comment %}<div class="promo_4">
-                <a class="promo_a" href="#">
-                    <div class="promo_4_l"><img src="/media/images/promo4.jpg" alt="" /></div>
-                    <div class="promo_4_r">
-                        <h2>Радиотелефоны</h2>
-                        <div class="item_price">от 900 <i class="r">руб.</i></div>
-                    </div>
-                </a>
-            </div>{% endcomment %}
-
         </div><!--/promos-->
     </div><!--/right-->
 

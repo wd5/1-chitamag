@@ -60,8 +60,8 @@ class ProductPropertyInline(AdminImageMixin, admin.TabularInline):
 
 #--Виджеты jquery Редактора
 class ProductAdminForm(forms.ModelForm):
-    category = forms.ModelChoiceField(queryset=Category.objects.exclude(parent=None), label='Категория', required=True)
-    #category = forms.ModelChoiceField(queryset=Category.objects.filter(is_published=True), label='Категория', required=True)
+    #category = forms.ModelChoiceField(queryset=Category.objects.exclude(parent=None), label='Категория', required=True)
+    category = forms.ModelChoiceField(queryset=Category.objects.filter(is_published=True), label='Категория', required=True)
 
     class Meta:
         model = Product

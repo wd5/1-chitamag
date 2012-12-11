@@ -42,7 +42,7 @@ def start_parse():
         str = str.replace(':', '').replace('-', '').replace(' ', '')[:-2]
 
         # сохраним файл по ссылке
-        link = "http://ontpay.info/te/test/goodsinc.xsql?timestamp=%s" % str
+        link = "http://ontpay.info/te/cm/goods.xsql?timestamp=%s" % str
         file_save_dir = settings.MEDIA_ROOT + '/uploads/'
         filename = 'xml_tmp'
         full_path = os.path.join(file_save_dir, filename + '.xml')
