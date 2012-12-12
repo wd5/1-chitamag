@@ -25,6 +25,7 @@
                          </div>
                          <div class="item_b">
                              <h3 class="item_name"><a href="{{ item.get_absolute_url }}">{{ item.category.title_singular|title }} {{ item.title }}</a></h3>
+                             <small>{{ item.description }}</small>
                              {% if item.status %}
                                  <div class="item_status item_wait">Срок доставки {{ item.status }} {{ item.status|choose_plural:"день,дня,дней" }}</div>
                              {% else %}
@@ -178,9 +179,10 @@
                          </div>
                          <div class="item_b">
                              <h3 class="item_name"><a href="{{ item.get_absolute_url }}">{{ item.category.title_singular|title }} {{ item.title }}</a></h3>
+                             <small>{{ item.description }}</small>
                              {% if item.status %}
                                  <div class="item_status item_wait">
-                                     {% if request.GET.view != 'list' %}Срок доставки{% endif %}{{ item.status }} {{ item.status|choose_plural:"день,дня,дней" }}
+                                     {% if request.GET.view != 'list' %}Срок доставки {% endif %}{{ item.status }} {{ item.status|choose_plural:"день,дня,дней" }}
                                  </div>
                              {% else %}
                                  <div class="item_status item_available">Есть в наличии</div>
@@ -232,6 +234,7 @@
                  </div>
                  <div class="item_b">
                      <h3 class="item_name"><a href="{{ item.get_absolute_url }}">{{ item.category.title_singular|title }} {{ item.title }}</a></h3>
+                     <small>{{ item.description }}</small>
                      {% if item.status %}
                          <div class="item_status item_wait">Срок доставки {{ item.status }} {{ item.status|choose_plural:"день,дня,дней" }}</div>
                      {% else %}
