@@ -17,7 +17,6 @@
 
         <div class="item_page">
             <div class="item_views_menu">
-                <p>{{ product.description|safe }}</p>
                 <ul>
                     <li class="curr"><a href="#">Фотогалерея</a></li>
                     <li><a href="#">Характеристики</a></li>
@@ -67,6 +66,7 @@
                         </ul>
                     {% endif %}
                 </div><!--/item_gal-->
+
                 {% if other_feature_groups %}
                     {% for feature_group in other_feature_groups %}
                         {% if feature_group.features_values %}
@@ -91,6 +91,7 @@
             </div><!--/item_page_l-->
 
             <div class="item_page_r col">
+                <p>{{ product.description|safe }}</p>
                 <div class="main_params">
                     {% if base_feature_group %}
                         <h3>{{ base_feature_group.title }}</h3>
