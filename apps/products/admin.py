@@ -26,7 +26,7 @@ class FeatureValueInline(admin.TabularInline):
     extra = 1
 
 class CategoryAdminForm(forms.ModelForm):
-    parent = forms.ModelChoiceField(queryset=Category.objects.filter(parent=None), label='Родительская Категория', required=True)
+    parent = forms.ModelChoiceField(queryset=Category.objects.filter(parent=None), label='Родительская Категория', required=False)
 
     class Meta:
         model = Category

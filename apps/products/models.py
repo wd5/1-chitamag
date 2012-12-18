@@ -321,7 +321,7 @@ class FeatureNameCategory(models.Model):
 class FeatureValue(models.Model):
     product = models.ForeignKey(Product, verbose_name=u'Товар')
     feature_name = models.ForeignKey(FeatureNameCategory, verbose_name=u'название характеристики', )
-    value = models.CharField(verbose_name=u'значение', max_length=100)
+    value = models.CharField(verbose_name=u'значение', max_length=500)
 
     class Meta:
         verbose_name = _(u'featurevalue_item')
