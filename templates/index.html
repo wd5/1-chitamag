@@ -15,9 +15,10 @@
                 <div class="promo_1">
                     <ul class="slider">
                         {% for product in slider_products %}
-                            <li {% if forloop.first %}class="curr_slide"{% endif %}><a class="promo_a" href="#">
-                               <div class="promo_1_l col">
-                                   <h2 class="promo_item_name">{{ product.category.title_singular }} {{ product.title }}</h2>
+                            <li {% if forloop.first %}class="curr_slide"{% endif %}>
+                            <a class="promo_a" href="{{ product.get_absolute_url }}">
+                                <div class="promo_1_l col">
+                                   <h2 class="promo_item_name">{{ product.category.get_root.title_singular|title }} {{ product.title }}</h2>
                                    {% if item.status %}
                                         <div class="item_status item_wait">Срок доставки: {{ item.status }} {{ item.status|choose_plural:"день,дня,дней" }}</div>
                                     {% else %}
@@ -31,13 +32,13 @@
                                            </div>
                                        {% endfor %}
                                    </div>
-                               </div>
-                               <div class="promo_1_r col">
-                                   {% thumbnail product.image "185x134" as im %}
-                                       <img src="{{ im.url }}" width="{{ im.width }}" style="margin:{{ im|margin:"185x134" }}" height="{{ im.height }}"/>
-                                   {% endthumbnail %}
-                                   <div class="item_price">{{ product.get_str_price }} <i class="r">руб.</i></div>
-                               </div>
+                                </div>
+                                <div class="promo_1_r col">
+                                    {% thumbnail product.image "185x134" as im %}
+                                        <img src="{{ im.url }}" width="{{ im.width }}" style="margin:{{ im|margin:"185x134" }}" height="{{ im.height }}"/>
+                                    {% endthumbnail %}
+                                    <div class="item_price">{{ product.get_str_price }} <i class="r">руб.</i></div>
+                                </div>
                             </a></li>
                         {% endfor %}
                     </ul>
