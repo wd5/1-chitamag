@@ -1,7 +1,8 @@
 <uwsgi>
-    <pythonpath>/home/chitamag/chitamag/</pythonpath>
-    <pythonpath>/home/chitamag/</pythonpath>
+    <pythonpath>/home/user/chitamag/</pythonpath>
+    <pythonpath>/home/user/</pythonpath>
     <app mountpoint="/">
         <script>django_wsgi</script>
     </app>
+    <workers>3</workers>
 </uwsgi>
