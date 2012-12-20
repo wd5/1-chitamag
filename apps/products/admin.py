@@ -39,10 +39,10 @@ class CategoryAdminForm(forms.ModelForm):
             )
 
 class CategoryAdmin(MPTTModelAdmin):
-    list_display = ('id','title','slug','order','is_published',)
-    list_display_links = ('id','title',)
+    list_display = ('id','category_name','slug','order','is_published',)
+    list_display_links = ('id','category_name',)
     list_editable = ('slug','order','is_published',)
-    list_filter = ('parent','is_published')
+    list_filter = ('is_published',)
     form = CategoryAdminForm
     exclude = ('xml_id','xml_up_id',)
     inlines = [FeatureGroupInline,]

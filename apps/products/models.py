@@ -123,6 +123,11 @@ class Category(MPTTModel):
         except:
             return False
 
+    def category_name(self):
+        return '<span>%s</span>' % self
+
+    category_name.allow_tags = True
+    category_name.short_description = 'Название'
 
 class Manufacturer(models.Model):
     title = models.CharField(verbose_name=u'название', max_length=400)
