@@ -244,8 +244,11 @@ class Product(models.Model):
 
     def get_base_feature_values(self):
         base_feature_group = self.category.get_base_feature_group()
-        base_features = self.get_feature_values().filter(feature_name__feature_group__id=base_feature_group.id)[
+        if base_feature_group:
+            base_features = self.get_feature_values().filter(feature_name__feature_group__id=base_feature_group.id)[
                         :6] # только первые 6 характеристик для отображения на главной
+        else:
+            base_features = []
         return base_features
 
 
