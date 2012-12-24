@@ -307,8 +307,7 @@ class FeatureGroup(models.Model):
 
 
 class FeatureNameCategory(models.Model):
-    feature_group = models.ForeignKey(FeatureGroup, verbose_name=u'Группа'
-        , ) # todo: только для группы из своей категории
+    feature_group = models.ForeignKey(FeatureGroup, verbose_name=u'Группа') # todo: только для группы из своей категории
     title = models.CharField(verbose_name=u'название', max_length=400)
     in_filter = models.BooleanField(verbose_name=u'применять при фильтрации', default=False)
     order = models.IntegerField(verbose_name=u'Порядок сортировки', default=10)

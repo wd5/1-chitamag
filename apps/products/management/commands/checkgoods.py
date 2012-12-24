@@ -104,9 +104,11 @@ def start_parse():
                     try:
                         prod_category = all_categories.get(xml_id=grp_id)
                         category_feature_names = prod_category.get_feature_names()
+                        category_feature_groups = prod_category.get_all_feature_groups()
                     except:
                         prod_category = False
                         category_feature_names = False
+                        category_feature_groups = False
 
                     new_product = False
                     if not exits_prod: # если продукта с таким же xml_code не существует, то создаём продукт
@@ -146,7 +148,7 @@ def start_parse():
                             exits_prod.price = product_price
                         if exits_prod.status != product_ship:
                             exits_prod.status = product_ship
-                        #проверим изменились ли свойства
+                            #проверим изменились ли свойства
                         property_array = z.getElementsByTagName('property')
                         product_properties = exits_prod.get_properties()
                         if property_array:
@@ -222,7 +224,7 @@ def start_parse():
                         #проверим изменилась ли категория
                         parameter_array = z.getElementsByTagName('parameter')
                         product_features = exits_prod.get_feature_values()
-                        if exits_prod.category == None or exits_prod.category.xml_id != grp_id:
+                        if exits_prod.category == None or exits_prod.category.xml_id != grp_id: # если у продукта не установлена категория или текущая категория не равна той что в xml
                             if prod_category: # если категория с таким идентификатором есть - то
                                 exits_prod.category = prod_category
                                 # удалин значения параметров товара
@@ -240,10 +242,16 @@ def start_parse():
                                                     title=parameter_name)
                                             except:
                                                 #parameter_model_object = False
+                                                # проверим есть ли группа параметров с таким именем для данной категори
                                                 if prod_category:
-                                                    new_param_group = FeatureGroup(category=prod_category,
-                                                        title=parameter_name_grp_title)
-                                                    new_param_group.save()
+                                                    try:
+                                                        new_param_group = category_feature_groups.get(
+                                                            title=parameter_name_grp_title)
+                                                    except: # если группы с таким именем нет - создаём
+                                                        new_param_group = FeatureGroup(category=prod_category,
+                                                            title=parameter_name_grp_title)
+                                                        new_param_group.save()
+
                                                     parameter_model_object = FeatureNameCategory(
                                                         feature_group=new_param_group, title=parameter_name)
                                                     parameter_model_object.save()
@@ -301,10 +309,16 @@ def start_parse():
                                                 new_parameter_value.save()
                                             else:
                                                 # создадим группу параметров и название параметра
+                                                # проверим есть ли группа параметров с таким именем для данной категори
                                                 if prod_category:
-                                                    new_param_group = FeatureGroup(category=prod_category,
-                                                        title=parameter_name_grp_title)
-                                                    new_param_group.save()
+                                                    try:
+                                                        new_param_group = category_feature_groups.get(
+                                                            title=parameter_name_grp_title)
+                                                    except: # если группы с таким именем нет - создаём
+                                                        new_param_group = FeatureGroup(category=prod_category,
+                                                            title=parameter_name_grp_title)
+                                                        new_param_group.save()
+
                                                     parameter_model_object = FeatureNameCategory(
                                                         feature_group=new_param_group, title=parameter_name)
                                                     parameter_model_object.save()
@@ -321,8 +335,7 @@ def start_parse():
                             for parameter in parameter_array:
                                 parameter_name = parameter.getAttribute(
                                     'name')
-                                parameter_name_grp_title = parameter.getAttribute(
-                                    'paramgrp')
+                                parameter_name_grp_title = parameter.getAttribute('paramgrp')
                                 parameter_value = parameter.getAttribute('value')
                                 if parameter_name != '' and parameter_value != '' and parameter_name_grp_title != '': # создаём значения параметров
                                     try:
@@ -331,11 +344,16 @@ def start_parse():
                                             title=parameter_name)
                                     except:
                                         #parameter_model_object = False
-                                        # создадим группу параметров и название параметра
+                                        # проверим есть ли группа параметров с таким именем для данной категори
                                         if prod_category:
-                                            new_param_group = FeatureGroup(category=prod_category,
-                                                title=parameter_name_grp_title)
-                                            new_param_group.save()
+                                            try:
+                                                new_param_group = category_feature_groups.get(
+                                                    title=parameter_name_grp_title)
+                                            except: # если группы с таким именем нет - создаём
+                                                new_param_group = FeatureGroup(category=prod_category,
+                                                    title=parameter_name_grp_title)
+                                                new_param_group.save()
+
                                             parameter_model_object = FeatureNameCategory(
                                                 feature_group=new_param_group, title=parameter_name)
                                             parameter_model_object.save()
