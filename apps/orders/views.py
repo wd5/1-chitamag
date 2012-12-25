@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import urllib2
+from django.core.context_processors import csrf
 from django.core.mail.message import EmailMessage
 from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseRedirect
 from django.shortcuts import render_to_response
@@ -69,11 +71,11 @@ class OrderFromView(FormView):
     template_name = 'orders/order_form.html'
 
     def post(self, request, *args, **kwargs):
+        context = {}
         try:
             phone = Settings.objects.get(name='contacts_phone').value
         except Settings.DoesNotExist:
             phone = False
-
         try:
             selfcarting_text = Settings.objects.get(name='selfcarting')
         except:
@@ -158,6 +160,21 @@ class OrderFromView(FormView):
             cart.delete() #Очистка и удаление корзины
             response.delete_cookie('chitamag_cart_id') # todo: ???
 
+            ################################ сохранение заказов в 1с
+
+            url = "http://ontpay.info/te/cm/INDOC.XSQL"
+            xml_string = render_to_string(
+                'orders/postorder.html',
+                    {
+                    'order': new_order,
+                    }
+            )
+            xml_string = xml_string.encode('utf-8')
+            req = urllib2.Request(url=url, data=xml_string, headers={'Content-Type': 'application/xml'})
+            response = urllib2.urlopen(req)
+            content = response.read()
+
+
             subject = u'ЧитаМаг - Информация по заказу.'
             subject = u''.join(subject.splitlines())
             message = render_to_string(
@@ -182,14 +199,16 @@ class OrderFromView(FormView):
                 reg_form = RegistrationForm(initial={'email': new_order.email, })
             else:
                 reg_form = False
-            return render_to_response('orders/order_form_final.html',
-                    {'order': new_order, 'request': request, 'user': request.user,
-                     'reg_form': reg_form, 'contacts_phone': phone, })
+
+            context = {'order': new_order, 'request': request, 'user': request.user,
+                'reg_form': reg_form, 'contacts_phone': phone, }
+            context.update(csrf(request))
+            return render_to_response('orders/order_form_final.html', context)
         else:
-            return render_to_response(self.template_name,
-                    {'order_form': order_form, 'request': request, 'user': request.user,
-                     'selfcarting_text': selfcarting_text, 'cart_total': cart.get_str_total(), 'contacts_phone': phone
-                    , })
+            context =  {'order_form': order_form, 'request': request, 'user': request.user,
+                 'selfcarting_text': selfcarting_text, 'cart_total': cart.get_str_total(), 'contacts_phone': phone}
+            context.update(csrf(request))
+            return render_to_response(self.template_name, context)
 
     def get(self, request, *args, **kwargs):
         form_class = self.get_form_class()
