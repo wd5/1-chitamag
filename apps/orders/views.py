@@ -174,6 +174,13 @@ class OrderFromView(FormView):
             response = urllib2.urlopen(req)
             content = response.read()
 
+            ## сохраним xml в файл
+            newname = '/uploads/xml_order.xml'
+            path_name = settings.MEDIA_ROOT + newname
+            destination = open(path_name, 'wb+')
+            destination.write(xml_string)
+            destination.close()
+
 
             subject = u'ЧитаМаг - Информация по заказу.'
             subject = u''.join(subject.splitlines())
@@ -628,6 +635,13 @@ class CheckOneClkFormView(View):
                 req = urllib2.Request(url=url, data=xml_string, headers={'Content-Type': 'application/xml'})
                 response = urllib2.urlopen(req)
                 content = response.read()
+
+                ## сохраним xml в файл
+                newname = '/uploads/xml_order_oneclick.xml'
+                path_name = settings.MEDIA_ROOT + newname
+                destination = open(path_name, 'wb+')
+                destination.write(xml_string)
+                destination.close()
 
                 try:
                     emailto = Settings.objects.get(name='workemail').value

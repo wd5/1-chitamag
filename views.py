@@ -327,6 +327,7 @@ def upload_xml(request):
                                 if img_array:
                                     for img in img_array:
                                         img_link = img.firstChild.nodeValue
+                                        file, ext = os.path.splitext(img_link)
                                         img_is_default = img.getAttribute('default')
                                         if img_is_default == 'yes' and img_link != '': # сохраняем как главное изображение товара
                                             # Save image
@@ -334,7 +335,7 @@ def upload_xml(request):
                                             try:
                                                 img_temp.write(urlopen(img_link).read())
                                                 img_temp.flush()
-                                                new_product.image.save(u"product_image_%s" % new_product.pk,
+                                                new_product.image.save(u"product_image_%s%s" % (new_product.pk,ext),
                                                     File(img_temp))
                                                 new_product.save()
                                             except:
@@ -346,7 +347,7 @@ def upload_xml(request):
                                                 img_temp.write(urlopen(img_link).read())
                                                 img_temp.flush()
                                                 new_image.image.save(
-                                                    u"product_image_%s-additional" % new_product.id,
+                                                    u"product_image_%s-additional%s" % (new_product.id,ext),
                                                     File(img_temp))
                                                 new_image.save()
                                             except:
@@ -385,12 +386,14 @@ def upload_xml(request):
                                 description=action_description)
                             new_action.save()
                             if action_img_url != '': # если в xml была ссылка на картику - то сохраняем её
+                                file, ext = os.path.splitext(action_img_url)
+
                                 # Save image
                                 img_temp = NamedTemporaryFile(delete=True)
                                 try:
                                     img_temp.write(urlopen(action_img_url).read())
                                     img_temp.flush()
-                                    new_action.image.save(u"action_image_%s" % new_action.pk, File(img_temp))
+                                    new_action.image.save(u"action_image_%s%s" % (new_action.pk,ext), File(img_temp))
                                     new_action.save()
                                 except:
                                     pass
