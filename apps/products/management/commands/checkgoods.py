@@ -25,21 +25,22 @@ class TestView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(TestView, self).get_context_data(**kwargs)
-        context['parse_info'] = start_parse()
+        if self.request.user.is_staff:
+            context['parse_info'] = start_parse()
         return context
-
 
 def start_parse():
     try:
         last_change_date = Product.objects.latest().change_date
-    except:
-        last_change_date = False
-    if last_change_date:
-        added = 0
-        updated = 0
-
         str = u'%s' % last_change_date
         str = str.replace(':', '').replace('-', '').replace(' ', '')[:-2]
+    except:
+        last_change_date = u'201201011000'
+        str = u'201201011000' # если товаров пока нет - ставим дату парсинга 01.01.2012
+
+    if str:
+        added = 0
+        updated = 0
 
         # сохраним файл по ссылке
         link = "http://ontpay.info/te/cm/goods.xsql?timestamp=%s" % str
@@ -180,6 +181,7 @@ def start_parse():
                         if img_array:
                             for img in img_array:
                                 img_link = img.firstChild.nodeValue
+                                file, ext = os.path.splitext(img_link)
                                 img_is_default = img.getAttribute('default')
                                 if img_is_default == 'yes' and img_link != '': # сохраняем как главное изображение товара
                                     if exits_prod.image:
@@ -194,7 +196,7 @@ def start_parse():
                                     try:
                                         img_temp.write(urlopen(img_link).read())
                                         img_temp.flush()
-                                        exits_prod.image.save(u"product_image_%s" % exits_prod.id,
+                                        exits_prod.image.save(u"product_image_%s%s" % (exits_prod.id,ext),
                                             File(img_temp))
                                         exits_prod.save()
                                     except:
@@ -215,7 +217,7 @@ def start_parse():
                                         img_temp.flush()
                                         new_image = ProductImage(product=exits_prod)
                                         new_image.image.save(
-                                            u"product_image_%s-additional" % exits_prod.pk,
+                                            u"product_image_%s-additional%s" % (exits_prod.pk, ext),
                                             File(img_temp))
                                         new_image.save()
                                     except:
@@ -376,6 +378,7 @@ def start_parse():
                         if img_array:
                             for img in img_array:
                                 img_link = img.firstChild.nodeValue
+                                file, ext = os.path.splitext(img_link)
                                 img_is_default = img.getAttribute('default')
                                 if img_is_default == 'yes' and img_link != '': # сохраняем как главное изображение товара
                                     # Save image
@@ -383,7 +386,7 @@ def start_parse():
                                     try:
                                         img_temp.write(urlopen(img_link).read())
                                         img_temp.flush()
-                                        new_product.image.save(u"product_image_%s" % new_product.id,
+                                        new_product.image.save(u"product_image_%s%s" % (new_product.id,ext),
                                             File(img_temp))
                                         new_product.save()
                                     except:
@@ -396,7 +399,7 @@ def start_parse():
                                         img_temp.flush()
                                         new_image = ProductImage(product=new_product)
                                         new_image.image.save(
-                                            u"product_image_%s-additional" % new_product.id,
+                                            u"product_image_%s-additional%s" % (new_product.id,ext),
                                             File(img_temp))
                                         new_image.save()
                                     except:

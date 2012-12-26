@@ -614,6 +614,21 @@ class CheckOneClkFormView(View):
                         'saved_object': saved_object,
                         }
                 )
+
+                ################################ сохранение заказов в 1с
+
+                url = "http://ontpay.info/te/cm/INDOC.XSQL"
+                xml_string = render_to_string(
+                    'orders/postorder_one_click.html',
+                        {
+                        'order': saved_object,
+                        }
+                )
+                xml_string = xml_string.encode('utf-8')
+                req = urllib2.Request(url=url, data=xml_string, headers={'Content-Type': 'application/xml'})
+                response = urllib2.urlopen(req)
+                content = response.read()
+
                 try:
                     emailto = Settings.objects.get(name='workemail').value
                 except Settings.DoesNotExist:

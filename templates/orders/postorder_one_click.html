@@ -1,0 +1,1 @@
+<Order Id='{{ order.id }}' Phone='{{ order.phone|escape }}' TotalPrice='{{ order.product_price }}' CreateDate='{{ order.create_date }}'><Item ProductCode = '{{ order.product.xml_code }}' Description='{{ order.product_description|escape }}' ProductPrice='{{ order.product_price }}' /></Order>
