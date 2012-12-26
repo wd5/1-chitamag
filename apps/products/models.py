@@ -147,7 +147,7 @@ class Manufacturer(models.Model):
 
 
 class CategoryService(models.Model):
-    category = models.ForeignKey(Category, verbose_name=u'Категория', )
+    category = models.ForeignKey(Category, verbose_name=u'Категория', db_index=True)
     description = models.TextField(verbose_name=u'описание', )
     price = models.DecimalField(verbose_name=u'Цена', decimal_places=2, max_digits=10, )
 
@@ -176,8 +176,8 @@ class CategoryService(models.Model):
 #    )
 
 class Product(models.Model):
-    category = models.ForeignKey(Category, verbose_name=u'Категория', blank=True, null=True)
-    manufacturer = models.ForeignKey(Manufacturer, verbose_name=u'производитель', blank=True, null=True)
+    category = models.ForeignKey(Category, verbose_name=u'Категория', blank=True, null=True, db_index=True)
+    manufacturer = models.ForeignKey(Manufacturer, verbose_name=u'производитель', blank=True, null=True, db_index=True)
     title = models.CharField(verbose_name=u'название', max_length=400)
     image = ImageField(verbose_name=u'изображение', upload_to=file_path_Product)
     description = models.TextField(blank=True, verbose_name=u'описание')
@@ -191,7 +191,7 @@ class Product(models.Model):
     is_discount = models.BooleanField(verbose_name=u'Скидка', default=False)
     in_slider = models.BooleanField(verbose_name=u'отображать в слайдере на главной', default=False)
 
-    related_products = models.ManyToManyField("self", verbose_name=u'Похожие товары', blank=True, null=True, )
+    related_products = models.ManyToManyField("self", verbose_name=u'Похожие товары', blank=True, null=True, db_index=True)
 
     order = models.IntegerField(verbose_name=u'Порядок сортировки', default=10)
     is_published = models.BooleanField(verbose_name=u'Опубликовано', default=True)
@@ -253,7 +253,7 @@ class Product(models.Model):
 
 
 class ProductImage(models.Model):
-    product = models.ForeignKey(Product, verbose_name=u'Товар')
+    product = models.ForeignKey(Product, verbose_name=u'Товар', db_index=True)
     image = ImageField(verbose_name=u'Картинка', upload_to=file_path_Product)
     order = models.IntegerField(verbose_name=u'Порядок сортировки', default=10)
 
@@ -267,7 +267,7 @@ class ProductImage(models.Model):
 
 
 class ProductProperty(models.Model):
-    product = models.ForeignKey(Product, verbose_name=u'Товар')
+    product = models.ForeignKey(Product, verbose_name=u'Товар', db_index=True)
     value = models.CharField(verbose_name=u'значение', max_length=255)
     order = models.IntegerField(verbose_name=u'Порядок сортировки', default=10)
     is_published = models.BooleanField(verbose_name=u'Опубликовано', default=True)
@@ -285,7 +285,7 @@ class ProductProperty(models.Model):
 
 
 class FeatureGroup(models.Model):
-    category = models.ForeignKey(Category, verbose_name=u'Категория', ) # todo: только второго уровня
+    category = models.ForeignKey(Category, verbose_name=u'Категория', db_index=True) # todo: только второго уровня
     title = models.CharField(verbose_name=u'название', max_length=400)
     order = models.IntegerField(verbose_name=u'Порядок сортировки', default=10)
     is_published = models.BooleanField(verbose_name=u'Опубликовано', default=True)
@@ -307,7 +307,7 @@ class FeatureGroup(models.Model):
 
 
 class FeatureNameCategory(models.Model):
-    feature_group = models.ForeignKey(FeatureGroup, verbose_name=u'Группа') # todo: только для группы из своей категории
+    feature_group = models.ForeignKey(FeatureGroup, verbose_name=u'Группа', db_index=True) # todo: только для группы из своей категории
     title = models.CharField(verbose_name=u'название', max_length=400)
     in_filter = models.BooleanField(verbose_name=u'применять при фильтрации', default=False)
     order = models.IntegerField(verbose_name=u'Порядок сортировки', default=10)
@@ -326,8 +326,8 @@ class FeatureNameCategory(models.Model):
 
 
 class FeatureValue(models.Model):
-    product = models.ForeignKey(Product, verbose_name=u'Товар')
-    feature_name = models.ForeignKey(FeatureNameCategory, verbose_name=u'название характеристики', )
+    product = models.ForeignKey(Product, verbose_name=u'Товар', db_index=True)
+    feature_name = models.ForeignKey(FeatureNameCategory, verbose_name=u'название характеристики', db_index=True)
     value = models.CharField(verbose_name=u'значение', max_length=500)
 
     class Meta:
