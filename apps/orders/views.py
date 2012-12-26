@@ -252,34 +252,36 @@ class OrderFromView(FormView):
         except Cart.DoesNotExist:
             cart = False
 
-        cart_total = cart.get_str_total()
-        context['cart_total'] = cart_total
+        if cart:
+            cart_total = cart.get_str_total()
+            context['cart_total'] = cart_total
 
-        context['order_form'] = form
+            context['order_form'] = form
 
-        if self.request.user.is_authenticated and self.request.user.id:
-            try:
-                profile_set = Profile.objects.filter(id=self.request.user.profile.id)
-                profile = Profile.objects.get(id=self.request.user.profile.id)
-                context['order_form'].fields['profile'].queryset = profile_set
-                context['order_form'].fields['profile'].initial = profile
-                context['order_form'].fields['first_name'].initial = profile.name
-                context['order_form'].fields['last_name'].initial = profile.last_name
-                context['order_form'].fields['email'].initial = profile.user.email
-                context['order_form'].fields['phone'].initial = profile.phone
+            if self.request.user.is_authenticated and self.request.user.id:
+                try:
+                    profile_set = Profile.objects.filter(id=self.request.user.profile.id)
+                    profile = Profile.objects.get(id=self.request.user.profile.id)
+                    context['order_form'].fields['profile'].queryset = profile_set
+                    context['order_form'].fields['profile'].initial = profile
+                    context['order_form'].fields['first_name'].initial = profile.name
+                    context['order_form'].fields['last_name'].initial = profile.last_name
+                    context['order_form'].fields['email'].initial = profile.user.email
+                    context['order_form'].fields['phone'].initial = profile.phone
+                    context['order_form'].fields['order_carting'].initial = u'carting'
+                    context['order_form'].fields['order_status'].initial = u'processed'
+                    context['order_form'].fields['address'].initial = profile.address
+                    context['order_form'].fields['note'].initial = profile.note
+                    context['order_form'].fields['total_price'].initial = cart_total
+                except Profile.DoesNotExist:
+                    return HttpResponseBadRequest()
+            else:
+                context['order_form'].fields['profile'].queryset = Profile.objects.extra(where=['1=0'])
                 context['order_form'].fields['order_carting'].initial = u'carting'
                 context['order_form'].fields['order_status'].initial = u'processed'
-                context['order_form'].fields['address'].initial = profile.address
-                context['order_form'].fields['note'].initial = profile.note
                 context['order_form'].fields['total_price'].initial = cart_total
-            except Profile.DoesNotExist:
-                return HttpResponseBadRequest()
         else:
-            context['order_form'].fields['profile'].queryset = Profile.objects.extra(where=['1=0'])
-            context['order_form'].fields['order_carting'].initial = u'carting'
-            context['order_form'].fields['order_status'].initial = u'processed'
-            context['order_form'].fields['total_price'].initial = cart_total
-
+            return HttpResponseRedirect('/cart/')
         return self.render_to_response(context)
 
     def get_context_data(self, **kwargs):
