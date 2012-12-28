@@ -170,7 +170,7 @@ class OrderFromView(FormView):
                     }
             )
             xml_string = xml_string.encode('utf-8')
-            req = urllib2.Request(url=url, data=xml_string, headers={'Content-Type': 'application/xml'})
+            req = urllib2.Request(url=url, data=xml_string, headers={'Content-Type': 'text/xml'})
             response = urllib2.urlopen(req)
             content = response.read()
 
@@ -634,7 +634,7 @@ class CheckOneClkFormView(View):
                         }
                 )
                 xml_string = xml_string.encode('utf-8')
-                req = urllib2.Request(url=url, data=xml_string, headers={'Content-Type': 'application/xml'})
+                req = urllib2.Request(url=url, data=xml_string, headers={'Content-Type': 'text/xml'})
                 response = urllib2.urlopen(req)
                 content = response.read()
 

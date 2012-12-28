@@ -28,6 +28,16 @@ class IndexView(TemplateView):
 
         context['big_banners'] = big_banners
         context['slider_products'] = slider_products
+
+        # проверка работы отправки xml
+#        import urllib2
+#        xml_string = u"<Order Id='12' FirstName='Admin' LastName='CHITAMAG' Email='admin@admin.ru' Phone='+7 (981) 131-64-98' CartingType='carting' OrderStatus='processed' Address='Северный 37' Note='примечание' TotalPrice='14 250' CreateDate='28 декабря 2012 г. 22:16:03'><Item ProductCode = '1439600' Count='1' Description=' - LG Optimus L7 p700' ProductPrice='8990,00' /><Item ProductCode = '1241400' Count='1' Description=' - LG P350' ProductPrice='5260,00' /></Order>"
+#        url = "http://ontpay.info/te/cm/INDOC.XSQL"
+#        xml_string = xml_string.encode('utf-8')
+#        req = urllib2.Request(url=url, data=xml_string, headers={'Content-Type': 'text/xml'})
+#        response = urllib2.urlopen(req)
+#        content = response.read()
+
         return context
 
 index = IndexView.as_view()
