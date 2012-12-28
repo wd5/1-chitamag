@@ -24,8 +24,10 @@
                              {% endif %}
                          </div>
                          <div class="item_b">
-                             <h3 class="item_name"><a href="{{ item.get_absolute_url }}">{{ item.category.title_singular|title }} {{ item.title }}</a></h3>
-                             <small>{{ item.description }}</small>
+                             <div class="item_des col">
+	                             <h3 class="item_name"><a href="{{ item.get_absolute_url }}">{{ item.category.title_singular|title }} {{ item.title }}</a></h3>
+	                             <div class="item_des_text">{{ item.description }}</div>
+                             </div>
                              {% if item.status %}
                                  <div class="item_status item_wait">Срок доставки {{ item.status }} {{ item.status|choose_plural:"день,дня,дней" }}</div>
                              {% else %}
@@ -178,8 +180,11 @@
                              {% endif %}
                          </div>
                          <div class="item_b">
-                             <h3 class="item_name"><a href="{{ item.get_absolute_url }}">{{ item.category.title_singular|title }} {{ item.title }}</a></h3>
-                             <small>{{ item.description }}</small>
+                             <div class="item_des col">
+ 	                            <h3 class="item_name"><a href="{{ item.get_absolute_url }}">{{ item.category.title_singular|title }} {{ item.title }}</a></h3>
+	                             <div class="item_des_text">{{ item.description }}</div>
+                             </div>
+                             
                              {% if item.status %}
                                  <div class="item_status item_wait">
                                      {% if request.GET.view != 'list' %}Срок доставки {% endif %}{{ item.status }} {{ item.status|choose_plural:"день,дня,дней" }}
@@ -233,8 +238,11 @@
                      {% endif %}
                  </div>
                  <div class="item_b">
-                     <h3 class="item_name"><a href="{{ item.get_absolute_url }}">{{ item.category.title_singular|title }} {{ item.title }}</a></h3>
-                     <small>{{ item.description }}</small>
+                     <div class="item_des col">
+	                     <h3 class="item_name"><a href="{{ item.get_absolute_url }}">{{ item.category.title_singular|title }} {{ item.title }}</a></h3>
+                         <div class="item_des_text">{{ item.description }}</div>
+                     </div>
+                             
                      {% if item.status %}
                          <div class="item_status item_wait">Срок доставки {{ item.status }} {{ item.status|choose_plural:"день,дня,дней" }}</div>
                      {% else %}

@@ -91,7 +91,7 @@
             </div><!--/item_page_l-->
 
             <div class="item_page_r col">
-                <p>{{ product.description|safe }}</p>
+                <div class="item_page_des">{{ product.description|safe }}</div>
                 <div class="main_params">
                     {% if base_feature_group %}
                         <h3>{{ base_feature_group.title }}</h3>
