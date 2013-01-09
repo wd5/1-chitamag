@@ -4,7 +4,6 @@ from django.db import models
 from apps.products.models import Product, CategoryService
 from apps.users.models import Profile
 import datetime
-import os
 
 class Cart(models.Model):
     profile = models.OneToOneField(Profile, verbose_name=u'Профиль', blank=True, null=True)
@@ -307,9 +306,9 @@ class OrderProduct(models.Model):
         verbose_name_plural = _(u'product_items')
 
     def get_total(self):
-        if self.product:
+        try:
             total = self.product.price * self.count
-        else:
+        except:
             total = self.product_price * self.count
         return total
 
@@ -375,9 +374,9 @@ class OrderProductService(models.Model):
         verbose_name_plural = _(u'service_items')
 
     def get_total(self):
-        if self.service:
+        try:
             total = self.service.price * self.count
-        else:
+        except:
             total = self.service_price * self.count
         return total
 
