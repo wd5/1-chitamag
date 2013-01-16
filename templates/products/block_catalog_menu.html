@@ -3,6 +3,7 @@
     <div class="catalog_menu">
         <ul>
             {% for item in  menu %}
+                {% if item.get_products %}
                 <li>
                     <div class="catalog_menu_1{% if item.id == parent_id %} curr{% endif %}"><a href="{{ item.get_absolute_url }}">{{ item.title }}</a></div>
 
@@ -11,14 +12,18 @@
                         {% if item.get_children and not item.get_products_in_categ %}
                             <ul class="catalog_submenu">
                                 {% for child in item.get_children %}
-                                    {% if child.is_published %}
-                                    <li{% if child.id == child_id %} class="curr"{% endif %}><a href="{{ child.get_absolute_url }}">{{ child.title }}</a><span></span></li>
+                                    {% if child.get_products %}
+                                        {% if child.is_published %}
+                                        <li{% if child.id == child_id %} class="curr"{% endif %}><a href="{{ child.get_absolute_url }}">{{ child.title }}</a><span></span></li>
+                                        {% endif %}
                                     {% endif %}
                                 {% endfor %}
                             </ul>
                         {% endif %}
                     {% endif %}
                 </li>
+                {% endif %}
+
             {% endfor %}
         </ul>
     </div>
